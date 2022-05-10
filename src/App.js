@@ -40,8 +40,6 @@ function App() {
   };
 
   const calculateTotal = () => {
-    if (records.length === 0) return;
-
     let sum = 0;
     records.forEach((record) => {
       if (record.isApprove) {
@@ -104,6 +102,7 @@ function App() {
       await deleteDoc(doc(db, "records", id));
       loadRecord();
     }
+    calculateTotal();
   };
 
   const onToggleStatus = async (id, status) => {
@@ -138,8 +137,25 @@ function App() {
         <strong>Total: </strong> <span>Rp. {currencyFormat(total)}</span>
       </div>
       <hr />
-      <h6>Details:</h6>
-      <div style={{ height: 600, overflow: "auto" }}>
+      <div className="d-flex justify-content-between align-items-center px-3">
+        <h6 className="btn btn-sm">List Item:</h6>
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          onClick={() => {
+            setFormData({
+              ...formData,
+              item: "",
+              value: 0,
+              isApprove: true,
+            });
+            setIsShowModal(true);
+          }}
+        >
+          Tambah
+        </button>
+      </div>
+      <div style={{ height: 500, overflow: "auto" }}>
         <ul className="p-0 m-0">
           {records.length > 0 &&
             records.map((record, index) => (
@@ -193,22 +209,6 @@ function App() {
             ))}
         </ul>
       </div>
-      <hr />
-      <button
-        type="button"
-        className="btn btn-secondary"
-        onClick={() => {
-          setFormData({
-            ...formData,
-            item: "",
-            value: 0,
-            isApprove: true,
-          });
-          setIsShowModal(true);
-        }}
-      >
-        Tambah
-      </button>
 
       {isShowModal && (
         <div
