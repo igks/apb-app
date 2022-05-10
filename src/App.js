@@ -10,6 +10,8 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { currencyFormat } from "./helpers/currency-format";
+import ListCard from "./components/ListCard";
 
 function App() {
   const [isShowModal, setIsShowModal] = useState(false);
@@ -48,10 +50,6 @@ function App() {
     });
 
     setTotal(sum);
-  };
-
-  const currencyFormat = (value) => {
-    return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
   };
 
   const onSubmit = async () => {
@@ -159,53 +157,13 @@ function App() {
         <ul className="p-0 m-0">
           {records.length > 0 &&
             records.map((record, index) => (
-              <div
+              <ListCard
                 key={index}
-                style={{
-                  margin: "5px",
-                  padding: "10px",
-                  borderRadius: 10,
-                }}
-                className={
-                  records.length > 0 && record.isApprove
-                    ? "alert alert-success"
-                    : "alert alert-danger"
-                }
-                role="alert"
-              >
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h6 className="p-0 m-0">{record.item}</h6>
-                  <p className="p-0 m-0">
-                    {records.length > 0 && record.isApprove
-                      ? "Approve"
-                      : "Pending"}
-                  </p>
-                </div>
-                <p className="m-0 p-0">Rp. {currencyFormat(record.value)}</p>
-                <hr />
-                <div className="m-0 p-0 d-flex justify-content-around">
-                  <span
-                    className="badge bg-primary"
-                    onClick={() => onToggleStatus(record.id, !record.isApprove)}
-                  >
-                    {records.length > 0 && record.isApprove
-                      ? "Pending"
-                      : "Approve"}
-                  </span>
-                  <span
-                    className="badge bg-info"
-                    onClick={() => onUpdate(record)}
-                  >
-                    Update
-                  </span>
-                  <span
-                    className="badge bg-danger"
-                    onClick={() => onDelete(record.id)}
-                  >
-                    Delete
-                  </span>
-                </div>
-              </div>
+                record={record}
+                onToggleStatus={onToggleStatus}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+              />
             ))}
         </ul>
       </div>
