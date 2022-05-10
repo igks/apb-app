@@ -13,9 +13,11 @@ import {
 import { currencyFormat } from "./helpers/currency-format";
 import ListCard from "./components/ListCard";
 import FormModal from "./components/FormModal";
+import FormLogin from "./components/FormLogin";
 
 function App() {
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [records, setRecord] = useState([]);
   const [total, setTotal] = useState(0);
   const [formData, setFormData] = useState({
@@ -23,6 +25,10 @@ function App() {
     item: "",
     value: 0,
     isApprove: true,
+  });
+  const [formLogin, setFormLogin] = useState({
+    email: "",
+    password: "",
   });
 
   const loadRecord = async () => {
@@ -109,6 +115,24 @@ function App() {
     }
   };
 
+  const updateFormLogin = (e) => {
+    let targetName = e.target.name;
+    setFormLogin({
+      ...formLogin,
+      [targetName]: e.target.value,
+    });
+  };
+
+  const onAddData = () => {
+    setFormData({
+      ...formData,
+      item: "",
+      value: 0,
+      isApprove: true,
+    });
+    setIsShowModal(true);
+  };
+
   const onUpdate = (record) => {
     setFormData({
       ...formData,
@@ -140,6 +164,17 @@ function App() {
     calculateTotal();
   };
 
+  const onLogin = () => {
+    if (
+      formLogin.email !== "admin@mail.com" &&
+      formLogin.password !== "Arkha100%"
+    ) {
+      alert("Email atau password salah!");
+    } else {
+      setIsAuthenticated(true);
+    }
+  };
+
   useEffect(() => {
     loadRecord();
     // eslint-disable-next-line
@@ -165,20 +200,12 @@ function App() {
         <button
           type="button"
           className="btn btn-secondary btn-sm"
-          onClick={() => {
-            setFormData({
-              ...formData,
-              item: "",
-              value: 0,
-              isApprove: true,
-            });
-            setIsShowModal(true);
-          }}
+          onClick={onAddData}
         >
           Tambah
         </button>
       </div>
-      <div style={{ height: 500, overflow: "auto" }}>
+      <div style={{ height: "70vh", overflow: "auto" }}>
         <ul className="p-0 m-0">
           {records.length > 0 &&
             records.map((record, index) => (
@@ -199,6 +226,14 @@ function App() {
           updateFormData={updateFormData}
           setIsShowModal={setIsShowModal}
           onSubmit={onSubmit}
+        />
+      )}
+
+      {!isAuthenticated && (
+        <FormLogin
+          formLogin={formLogin}
+          updateFormLogin={updateFormLogin}
+          onLogin={onLogin}
         />
       )}
     </div>
