@@ -84,6 +84,30 @@ function App() {
     loadRecord();
   };
 
+  const updateFormData = (e) => {
+    let targetName = e.target.name;
+    if (targetName === "item") {
+      setFormData({
+        ...formData,
+        [targetName]: e.target.value,
+      });
+    }
+    if (targetName === "value") {
+      let parsed = parseInt(e.target.value);
+      if (isNaN(parsed)) {
+        setFormData({
+          ...formData,
+          [targetName]: 0,
+        });
+      } else {
+        setFormData({
+          ...formData,
+          [targetName]: parsed,
+        });
+      }
+    }
+  };
+
   const onUpdate = (record) => {
     setFormData({
       ...formData,
@@ -195,12 +219,8 @@ function App() {
                   className="form-control form-control-sm"
                   type="text"
                   value={formData.item}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      item: e.target.value,
-                    })
-                  }
+                  name="item"
+                  onChange={(e) => updateFormData(e)}
                 />
               </div>
 
@@ -210,12 +230,8 @@ function App() {
                   className="form-control form-control-sm"
                   type="number"
                   value={formData.value}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      value: parseInt(e.target.value),
-                    })
-                  }
+                  name="value"
+                  onChange={(e) => updateFormData(e)}
                 />
               </div>
 
