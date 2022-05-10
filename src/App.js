@@ -9,6 +9,7 @@ import {
   deleteDoc,
   query,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import { currencyFormat } from "./helpers/currency-format";
 import ListCard from "./components/ListCard";
@@ -164,14 +165,20 @@ function App() {
     calculateTotal();
   };
 
-  const onLogin = () => {
-    if (
-      formLogin.email !== "admin@mail.com" &&
-      formLogin.password !== "Arkha100%"
-    ) {
-      alert("Email atau password salah!");
-    } else {
-      setIsAuthenticated(true);
+  const onLogin = async () => {
+    try {
+      let docSnap = await getDoc(doc(db, "auth", "Kds5mdBvmZ05cRJBYmFL"));
+      let credential = docSnap.data();
+      if (
+        formLogin.email !== credential.email &&
+        formLogin.password !== credential.password
+      ) {
+        alert("Email atau password salah!");
+      } else {
+        setIsAuthenticated(true);
+      }
+    } catch (err) {
+      alert(err);
     }
   };
 
