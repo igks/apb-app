@@ -1,7 +1,14 @@
 import React from "react";
 import { currencyFormat } from "../helpers/currency-format";
+import { useNavigate } from "react-router-dom";
 
 const ListCard = ({ record, onToggleStatus, onUpdate, onDelete }) => {
+  const navigate = useNavigate();
+
+  const goToDetail = (record) => {
+    navigate("/detail", { state: record });
+  };
+
   return (
     <div
       style={{
@@ -16,10 +23,13 @@ const ListCard = ({ record, onToggleStatus, onUpdate, onDelete }) => {
       }
       role="alert"
     >
-      <div>
+      <div className="p-1">
         <h6 className="p-0 m-0">{record.item}</h6>
         <p className="m-0 p-0">Rp. {currencyFormat(record.value)}</p>
         <p className="p-0 m-0">{record.isApprove ? "Approve" : "Pending"}</p>
+        <div className="badge bg-warning" onClick={() => goToDetail(record)}>
+          Detail
+        </div>
       </div>
       <div className="m-0 p-0 d-flex flex-column justify-content-between">
         <div

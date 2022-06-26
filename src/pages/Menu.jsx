@@ -25,7 +25,7 @@ const Menu = () => {
             color: "#555",
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/Catatan")}
+          onClick={() => navigate("/#")}
         >
           CATATAN
         </div>
@@ -36,7 +36,7 @@ const Menu = () => {
             color: "#555",
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/laporan")}
+          onClick={() => navigate("/#")}
         >
           LAPORAN
         </div>

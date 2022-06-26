@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import FormLogin from "./pages/FormLogin";
 import Menu from "./pages/Menu";
 import Anggaran from "./pages/Anggaran";
+import Detail from "./pages/Detail";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,6 +49,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Menu />}></Route>
           <Route path="/anggaran" element={<Anggaran />}></Route>
+          <Route path="/detail" element={<Detail />}></Route>
         </Routes>
       </Router>
 
