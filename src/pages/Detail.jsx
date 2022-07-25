@@ -155,11 +155,28 @@ const Detail = () => {
             record.details.map((detail, index) => (
               <div
                 key={`detail_${index}`}
-                className="alert alert-secondary p-1 mb-2"
-                onClick={() => onDeleteDetail(index)}
+                className="alert alert-warning p-2 mb-2 d-flex flex-row justify-content-between"
               >
-                <p className="p-0 m-0">{detail.item}</p>
-                <p className="m-0 p-0">Rp. {currencyFormat(detail.value)}</p>
+                <div>
+                  <p className="p-0 m-0">{detail.item}</p>
+                  <p className="m-0 p-0">Rp. {currencyFormat(detail.value)}</p>
+                </div>
+                <div
+                  className="bg-danger"
+                  style={{
+                    color: "white",
+                    fontSize: 18,
+                    width: 30,
+                    height: 30,
+                    borderRadius: 15,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onClick={() => onDeleteDetail(index)}
+                >
+                  -
+                </div>
               </div>
             ))}
         </>
