@@ -10,7 +10,8 @@ import {
   deleteDoc,
   query,
   getDocs,
-  getDoc,
+  where,
+  orderBy,
 } from "firebase/firestore";
 import { currencyFormat } from "../helpers/currency-format";
 import ListCard from "../components/ListCard";
@@ -22,15 +23,38 @@ function Anggaran() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [records, setRecord] = useState([]);
   const [total, setTotal] = useState(0);
+  const [used, setUsed] = useState(0);
   const [formData, setFormData] = useState({
     id: null,
     item: "",
     value: 0,
     isApprove: true,
+    details: [],
   });
+  const [bulan, setBulan] = useState("Pilih bulan");
+
+  const optionBulan = [
+    "Pilih bulan",
+    "Januari",
+    "Pebruari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "Nopember",
+    "Desember",
+  ];
 
   const loadRecord = async () => {
-    const q = query(collection(db, "records"));
+    const q = query(
+      collection(db, "records"),
+      where("bulan", "==", bulan),
+      orderBy("item")
+    );
     const querySnapshot = await getDocs(q);
     const newRecords = [];
     querySnapshot.forEach((doc) => {
@@ -41,6 +65,7 @@ function Anggaran() {
         value: data.value,
         isApprove: data.isApprove,
         details: data.details,
+        bulan: data.bulan,
       });
     });
 
@@ -49,13 +74,20 @@ function Anggaran() {
 
   const calculateTotal = () => {
     let sum = 0;
+    let used = 0;
     records.forEach((record) => {
       if (record.isApprove) {
         sum += record.value;
+        if (record?.details?.length > 0 ?? false) {
+          record.details.forEach((detail) => {
+            used += detail.value;
+          });
+        }
       }
     });
 
     setTotal(sum);
+    setUsed(used);
   };
 
   const onSubmit = async () => {
@@ -67,7 +99,10 @@ function Anggaran() {
 
     if (formData.id != null) {
       try {
-        await setDoc(doc(db, "records", `${formData.id}`), formData);
+        await updateDoc(doc(db, "records", `${formData.id}`), {
+          item: formData.item,
+          value: formData.value,
+        });
       } catch (err) {
         alert(err);
       }
@@ -85,6 +120,7 @@ function Anggaran() {
       item: "",
       value: 0,
       isApprove: true,
+      details: [],
     });
     setIsShowModal(false);
     loadRecord();
@@ -120,6 +156,7 @@ function Anggaran() {
       item: "",
       value: 0,
       isApprove: true,
+      bulan: bulan,
     });
     setIsShowModal(true);
   };
@@ -131,6 +168,7 @@ function Anggaran() {
       item: record.item,
       value: record.value,
       isApprove: record.isApprove,
+      bulan: record.bulan,
     });
     setIsShowModal(true);
   };
@@ -158,7 +196,7 @@ function Anggaran() {
   useEffect(() => {
     loadRecord();
     // eslint-disable-next-line
-  }, []);
+  }, [bulan]);
 
   useEffect(() => {
     calculateTotal();
@@ -167,49 +205,70 @@ function Anggaran() {
 
   return (
     <div className="container">
-      <div className="alert alert-info" role="alert">
-        <strong>Total: </strong> <span>Rp. {currencyFormat(total)}</span>
-      </div>
-      <hr />
-      <div className="d-flex justify-content-between align-items-center px-3">
-        <h6 className="btn btn-sm">Daftar Anggaran:</h6>
-        <button
-          type="button"
-          className="btn btn-primary btn-sm"
-          onClick={onAddData}
-        >
-          Tambah
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          onClick={() => navigate("/")}
-        >
-          Kembali
-        </button>
-      </div>
-      <div style={{ height: "70vh", overflow: "auto" }}>
-        <ul className="p-0 m-0">
-          {records.length > 0 &&
-            records.map((record, index) => (
-              <ListCard
-                key={index}
-                record={record}
-                onToggleStatus={onToggleStatus}
-                onUpdate={onUpdate}
-                onDelete={onDelete}
-              />
-            ))}
-        </ul>
-      </div>
+      {bulan === "Pilih bulan" ? (
+        <>
+          <div style={{ width: "100%", margin: "auto" }}>
+            <select onChange={(e) => setBulan(e.target.value)}>
+              {optionBulan.map((bln) => (
+                <option key={bln} value={bln.toLowerCase()}>
+                  {bln}
+                </option>
+              ))}
+            </select>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="alert alert-info" role="alert">
+            <strong>Total: </strong> <span>Rp. {currencyFormat(total)}</span>
+            <br />
+            <strong className="text-danger">Sisa: </strong>{" "}
+            <span className="text-danger">
+              Rp. {currencyFormat(total - used)}
+            </span>
+          </div>
+          <hr />
+          <div className="d-flex justify-content-between align-items-center px-3">
+            <h6 className="btn btn-sm">Anggaran {bulan.toUpperCase()}</h6>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={onAddData}
+            >
+              Tambah
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => navigate("/")}
+            >
+              Kembali
+            </button>
+          </div>
+          <div style={{ height: "70vh", overflow: "auto" }}>
+            <ul className="p-0 m-0">
+              {records.length > 0 &&
+                records.map((record, index) => (
+                  <ListCard
+                    key={index}
+                    record={record}
+                    onToggleStatus={onToggleStatus}
+                    onUpdate={onUpdate}
+                    onDelete={onDelete}
+                  />
+                ))}
+            </ul>
+          </div>
 
-      {isShowModal && (
-        <FormModal
-          formData={formData}
-          updateFormData={updateFormData}
-          setIsShowModal={setIsShowModal}
-          onSubmit={onSubmit}
-        />
+          {isShowModal && (
+            <FormModal
+              formData={formData}
+              updateFormData={updateFormData}
+              setIsShowModal={setIsShowModal}
+              onSubmit={onSubmit}
+            />
+          )}
+        </>
       )}
     </div>
   );
