@@ -29,6 +29,7 @@ const FormModal = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
               type="text"
               value={formData.item}
               name="item"
+              autoComplete="off"
               onChange={(e) => updateFormData(e)}
             />
           </div>
@@ -40,6 +41,7 @@ const FormModal = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
               type="number"
               value={formData.value}
               name="value"
+              autoComplete="off"
               onChange={(e) => updateFormData(e)}
             />
           </div>
