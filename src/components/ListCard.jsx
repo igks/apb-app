@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { currencyFormat } from "../helpers/currency-format";
 import { useNavigate } from "react-router-dom";
 
-const ListCard = ({ record, onToggleStatus, onUpdate, onDelete }) => {
+const ListCard = ({ month, record, onToggleStatus, onUpdate, onDelete }) => {
   const navigate = useNavigate();
 
   const [used, setUsed] = useState(0);
 
   const goToDetail = (record) => {
-    navigate("/detail", { state: record });
+    navigate("/detail", { state: { data: record, month } });
   };
 
   useEffect(() => {

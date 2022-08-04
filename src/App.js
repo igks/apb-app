@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { db } from "./services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import FormLogin from "./pages/FormLogin";
 import Menu from "./pages/Menu";
 import Anggaran from "./pages/Anggaran";
 import Detail from "./pages/Detail";
+
+import "./App.css";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,25 +48,28 @@ function App() {
 
   return (
     <>
-      <div className="text-center my-2">
-        <h4>Anggaran Pengeluaran Bulanan</h4>
-        <hr />
-      </div>
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<Menu />}></Route>
-          <Route path="/anggaran" element={<Anggaran />}></Route>
-          <Route path="/detail" element={<Detail />}></Route>
-        </Routes>
-      </Router>
-
-      {!isAuthenticated && (
-        <div className="container">
-          <FormLogin
-            formLogin={formLogin}
-            updateFormLogin={updateFormLogin}
-            onLogin={onLogin}
-          />
+      {!isAuthenticated ? (
+        <FormLogin
+          formLogin={formLogin}
+          updateFormLogin={updateFormLogin}
+          onLogin={onLogin}
+        />
+      ) : (
+        <div className="main-container">
+          <div className="text-center my-2">
+            <h4>Anggaran Pengeluaran Bulanan</h4>
+            <hr />
+          </div>
+          <div className="content-container">
+            <Router>
+              <Routes>
+                <Route exact path="/" element={<Menu />}></Route>
+                <Route path="/anggaran" element={<Anggaran />}></Route>
+                <Route path="/detail" element={<Detail />}></Route>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Router>
+          </div>
         </div>
       )}
     </>

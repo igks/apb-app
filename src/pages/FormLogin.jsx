@@ -4,17 +4,14 @@ const FormLogin = ({ formLogin, updateFormLogin, onLogin }) => {
   return (
     <div
       style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: "rgba(255, 255, 255, 1)",
+        width: "100%",
+        height: 700,
         display: "flex",
+        justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <div className="mx-2 w-100">
+      <div>
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Form Login</h5>

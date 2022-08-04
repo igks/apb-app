@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { db } from "../services/firebase";
 import {
   collection,
   addDoc,
   doc,
-  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -19,6 +18,7 @@ import FormModal from "../components/FormModal";
 
 function Anggaran() {
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   const [isShowModal, setIsShowModal] = useState(false);
   const [records, setRecord] = useState([]);
@@ -203,12 +203,31 @@ function Anggaran() {
     // eslint-disable-next-line
   }, [records]);
 
+  useEffect(() => {
+    if (state != null || state != undefined) {
+      setBulan(state);
+    }
+    // eslint-disable-next-line
+  }, [state]);
+
   return (
     <div className="container">
       {bulan === "Pilih bulan" ? (
         <>
-          <div style={{ width: "100%", margin: "auto" }}>
-            <select onChange={(e) => setBulan(e.target.value)}>
+          <div style={{ width: "100%" }}>
+            <select
+              style={{
+                width: "100%",
+                height: 50,
+                fontSize: 20,
+                marginTop: 50,
+                padding: 10,
+                border: "0",
+                borderRadius: 10,
+                backgroundColor: "#70cdff",
+              }}
+              onChange={(e) => setBulan(e.target.value)}
+            >
               {optionBulan.map((bln) => (
                 <option key={bln} value={bln.toLowerCase()}>
                   {bln}
@@ -251,6 +270,7 @@ function Anggaran() {
                 records.map((record, index) => (
                   <ListCard
                     key={index}
+                    month={bulan}
                     record={record}
                     onToggleStatus={onToggleStatus}
                     onUpdate={onUpdate}

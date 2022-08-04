@@ -93,7 +93,7 @@ const Detail = () => {
   };
 
   useEffect(() => {
-    if (state != null) setRecord(state);
+    if (state.data != null) setRecord(state.data);
   }, [state]);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const Detail = () => {
           <button
             type="button"
             className="btn btn-secondary btn-sm mb-2"
-            onClick={() => navigate("/anggaran")}
+            onClick={() => navigate("/anggaran", { state: state.month })}
           >
             Kembali
           </button>
