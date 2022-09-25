@@ -219,12 +219,11 @@ function Anggaran() {
               style={{
                 width: "100%",
                 height: 50,
-                fontSize: 20,
-                marginTop: 50,
+                fontSize: 16,
                 padding: 10,
-                border: "0",
+                border: "1px solid grey",
                 borderRadius: 10,
-                backgroundColor: "#70cdff",
+                backgroundColor: "white",
               }}
               onChange={(e) => setBulan(e.target.value)}
             >
@@ -247,8 +246,8 @@ function Anggaran() {
             </span>
           </div>
           <hr />
-          <div className="d-flex justify-content-between align-items-center px-3">
-            <h6 className="btn btn-sm">Anggaran {bulan.toUpperCase()}</h6>
+          <h4 className="text-center">Anggaran {bulan.toUpperCase()}</h4>
+          <div className="d-flex justify-content-between align-items-center px-3 mt-3">
             <button
               type="button"
               className="btn btn-primary btn-sm"
@@ -264,7 +263,8 @@ function Anggaran() {
               Kembali
             </button>
           </div>
-          <div style={{ height: "70vh", overflow: "auto" }}>
+          <hr />
+          <div style={{ height: "60vh", overflow: "auto" }}>
             <ul className="p-0 m-0">
               {records.length > 0 &&
                 records.map((record, index) => (

@@ -19,6 +19,7 @@ const ListCard = ({ month, record, onToggleStatus, onUpdate, onDelete }) => {
       });
       setUsed(newUsedValue);
     }
+    // eslint-disable-next-line
   }, []);
 
   return (

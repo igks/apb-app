@@ -13,6 +13,8 @@ import Anggaran from "./pages/Anggaran";
 import Detail from "./pages/Detail";
 
 import "./App.css";
+import Catatan from "./pages/Catatan";
+import MyChart from "./pages/Chart";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,6 +68,9 @@ function App() {
                 <Route exact path="/" element={<Menu />}></Route>
                 <Route path="/anggaran" element={<Anggaran />}></Route>
                 <Route path="/detail" element={<Detail />}></Route>
+                <Route path="/catatan" element={<Catatan />}></Route>
+                <Route path="/chart" element={<MyChart />}></Route>
+
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Router>

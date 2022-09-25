@@ -25,21 +25,21 @@ const Menu = () => {
             color: "#555",
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/catatan")}
         >
           CATATAN
         </div>
-        <div
+        {/* <div
           className="alert alert-info"
           style={{
             textDecoration: "none",
             color: "#555",
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/#")}
+          onClick={() => navigate("/chart")}
         >
-          LAPORAN
-        </div>
+          GRAFIK
+        </div> */}
       </div>
     </>
   );
