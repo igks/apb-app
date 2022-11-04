@@ -4,11 +4,21 @@ import FormModal from "../components/FormModal";
 import { currencyFormat } from "../helpers/currency-format";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import {
+  AddFileIcon,
+  DeleteIcon,
+  GoBackIcon,
+  RemainIcon,
+  WalletIcon,
+} from "../components/Icons";
+import { Colors } from "../constants";
+import _ from "lodash";
 
 const Detail = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [record, setRecord] = useState(null);
+  const [compiledDetails, setCompiledDetails] = useState([]);
   const [used, setUsed] = useState(0);
   const [isShowModal, setIsShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,7 +51,7 @@ const Detail = () => {
   };
 
   const onSubmit = async () => {
-    if (formData.item === "" || formData.value === 0) {
+    if (formData.item === "" || formData.value < 0) {
       setIsShowModal(false);
       alert("Data tidak valid!");
       return;
@@ -93,7 +103,13 @@ const Detail = () => {
   };
 
   useEffect(() => {
-    if (state.data != null) setRecord(state.data);
+    if (state.data != null) {
+      const objectDetails = _.groupBy(state.data.details, (detail) => {
+        return detail.tanggal;
+      });
+      setCompiledDetails(objectDetails);
+      setRecord(state.data);
+    }
   }, [state]);
 
   useEffect(() => {
@@ -112,71 +128,64 @@ const Detail = () => {
         <div>Loading...</div>
       ) : (
         <>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm mb-2"
-            onClick={() => navigate("/anggaran", { state: state.month })}
-          >
-            Kembali
-          </button>
-          <div className="alert alert-info d-flex flex-row justify-content-between">
-            <div>
-              <h6 className="p-0 m-0">{record.item}</h6>
-              <p className="m-0 p-0">
-                Anggaran Rp. {currencyFormat(record.value)}
-              </p>
-              {/* <p className="m-0 p-0 text-success">
-                Terpakai Rp. {currencyFormat(used)}
-              </p> */}
-              <p className="m-0 p-0 text-danger">
-                Sisa Rp. {currencyFormat(record.value - used)}
-              </p>
-            </div>
-            <div
-              className="bg-success"
-              style={{
-                color: "white",
-                fontSize: 24,
-                width: 40,
-                height: 40,
-                borderRadius: 25,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+          <div className="d-flex flex-row justify-content-between mb-3">
+            <GoBackIcon
+              size="lg"
+              color={Colors.grey}
+              onClick={() => navigate("/anggaran", { state: state.month })}
+            />
+            <h6 className="p-0 m-0">{record.item}</h6>
+            <AddFileIcon
+              size="lg"
+              color={Colors.green}
               onClick={() => {
                 setIsShowModal(true);
               }}
-            >
-              +
+            />
+          </div>
+
+          <div className="row mb-3">
+            <div className="col px-2">
+              <div className="col alert alert-success p-1 mb-0" role="alert">
+                <WalletIcon size="1x" />{" "}
+                <span> {currencyFormat(record.value)}</span>
+              </div>
+            </div>
+            <div className="col px-2">
+              <div className="col alert alert-danger p-1 mb-0" role="alert">
+                <RemainIcon size="1x" />
+                <span> {currencyFormat(record.value - used)}</span>
+              </div>
             </div>
           </div>
-          {record?.details?.length > 0 &&
-            record.details.map((detail, index) => (
-              <div
-                key={`detail_${index}`}
-                className="alert alert-warning p-2 mb-2 d-flex flex-row justify-content-between"
-              >
-                <div>
-                  <p className="p-0 m-0">{detail.item}</p>
-                  <p className="m-0 p-0">Rp. {currencyFormat(detail.value)}</p>
-                </div>
-                <div
-                  className="bg-danger"
-                  style={{
-                    color: "white",
-                    fontSize: 18,
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onClick={() => onDeleteDetail(index)}
-                >
-                  -
-                </div>
+
+          {Object.keys(compiledDetails).length > 0 &&
+            Object.keys(compiledDetails).map((key) => (
+              <div key={key} className="mb-2">
+                <small>Tanggal : {key}</small>
+                <hr className="m-0 mb-2" />
+                {compiledDetails[key].map((detail, index) => (
+                  <div
+                    key={`detail_${index}`}
+                    className="alert alert-warning p-1 mb-2 d-flex flex-row justify-content-between align-items-center px-2"
+                  >
+                    <div className="d-flex flex-column justify-content-between">
+                      <div>
+                        <small className="p-0 m-0">{detail.item}</small>
+                      </div>
+                      <div>
+                        <small className="m-0 p-0">
+                          {currencyFormat(detail.value)}
+                        </small>
+                      </div>
+                    </div>
+                    <DeleteIcon
+                      color={Colors.red}
+                      size="lg"
+                      onClick={() => onDeleteDetail(index)}
+                    />
+                  </div>
+                ))}
               </div>
             ))}
         </>

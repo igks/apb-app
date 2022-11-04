@@ -29,6 +29,17 @@ const Menu = () => {
         >
           CATATAN
         </div>
+        <div
+          className="alert alert-info"
+          style={{
+            textDecoration: "none",
+            color: "#555",
+            fontWeight: "bold",
+          }}
+          onClick={() => navigate("/")}
+        >
+          PENGELUARAN TANGAL TERTENTU
+        </div>
         {/* <div
           className="alert alert-info"
           style={{

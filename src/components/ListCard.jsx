@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { currencyFormat } from "../helpers/currency-format";
-import { useNavigate } from "react-router-dom";
+import { EllipsisIcon, RemainIcon, WalletIcon } from "./Icons";
+import { Colors } from "../constants";
 
-const ListCard = ({ month, record, onToggleStatus, onUpdate, onDelete }) => {
-  const navigate = useNavigate();
-
+const ListCard = ({ record, onEllipsisClicked }) => {
   const [used, setUsed] = useState(0);
-
-  const goToDetail = (record) => {
-    navigate("/detail", { state: { data: record, month } });
-  };
 
   useEffect(() => {
     if (record?.details?.length > 0 ?? false) {
@@ -35,29 +30,27 @@ const ListCard = ({ month, record, onToggleStatus, onUpdate, onDelete }) => {
       role="alert"
     >
       <div className="p-0">
-        <h6 className="p-0 m-0">{record.item}</h6>
-        <p className="m-0 p-0">Anggaran Rp. {currencyFormat(record.value)}</p>
-        <p className="m-0 p-0 text-danger">
-          Sisa Rp. {currencyFormat(record.value - used)}
-        </p>
-        {/* <p className="p-0 m-0">{record.isApprove ? "Approve" : "Pending"}</p> */}
-      </div>
-      <hr className="mt-1" />
-      <div className="m-0 p-0 d-flex flex-row justify-content-around">
-        <div className="badge bg-warning" onClick={() => goToDetail(record)}>
-          Detail
+        <div className="mb-1 d-flex flex-row justify-content-between">
+          <p className="p-0 m-0 " style={{ fontSize: 15, fontWeight: "bold" }}>
+            {record.item}
+          </p>
+          <EllipsisIcon
+            color={Colors.grey}
+            size="lg"
+            onClick={() => onEllipsisClicked(record, true)}
+          />
         </div>
-        {/* <div
-          className="badge bg-primary"
-          onClick={() => onToggleStatus(record.id, !record.isApprove)}
-        >
-          {record.isApprove ? "Pending" : "Approve"}
-        </div> */}
-        <div className="badge bg-info" onClick={() => onUpdate(record)}>
-          Update
-        </div>
-        <div className="badge bg-danger" onClick={() => onDelete(record.id)}>
-          Delete
+        <div className="row">
+          <div className="col">
+            <p className="m-0 p-0" style={{ fontSize: 14 }}>
+              <WalletIcon /> {currencyFormat(record.value)}
+            </p>
+          </div>
+          <div className="col">
+            <p className="m-0 p-0 text-danger" style={{ fontSize: 14 }}>
+              <RemainIcon /> {currencyFormat(record.value - used)}
+            </p>
+          </div>
         </div>
       </div>
     </div>

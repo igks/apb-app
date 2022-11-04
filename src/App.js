@@ -59,7 +59,7 @@ function App() {
       ) : (
         <div className="main-container">
           <div className="text-center my-2">
-            <h4>Anggaran Pengeluaran Bulanan</h4>
+            <h6>Anggaran Pengeluaran Bulanan</h6>
             <hr />
           </div>
           <div className="content-container">

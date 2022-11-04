@@ -12,15 +12,23 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import { currencyFormat } from "../helpers/currency-format";
 import ListCard from "../components/ListCard";
 import FormModal from "../components/FormModal";
+import { AddFileIcon, GoBackIcon } from "../components/Icons";
+import { Colors, optionBulan } from "../constants";
+import AnggaranHeader from "../components/AnggaranHeader";
+import OptionModal from "../components/OptionModal";
+import { mock, compileRecord } from "../services/mock";
 
 function Anggaran() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowOptionModal, setIsShowOptionModal] = useState({
+    record: null,
+    status: false,
+  });
   const [records, setRecord] = useState([]);
   const [total, setTotal] = useState(0);
   const [used, setUsed] = useState(0);
@@ -33,22 +41,6 @@ function Anggaran() {
   });
   const [bulan, setBulan] = useState("Pilih bulan");
 
-  const optionBulan = [
-    "Pilih bulan",
-    "Januari",
-    "Pebruari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "Nopember",
-    "Desember",
-  ];
-
   const loadRecord = async () => {
     const q = query(
       collection(db, "records"),
@@ -59,6 +51,7 @@ function Anggaran() {
     const newRecords = [];
     querySnapshot.forEach((doc) => {
       let data = doc.data();
+
       newRecords.push({
         id: doc.id,
         item: data.item,
@@ -91,7 +84,7 @@ function Anggaran() {
   };
 
   const onSubmit = async () => {
-    if (formData.item === "" || formData.value === 0) {
+    if (formData.item === "" || formData.value < 0) {
       setIsShowModal(false);
       alert("Data tidak valid!");
       return;
@@ -170,10 +163,23 @@ function Anggaran() {
       isApprove: record.isApprove,
       bulan: record.bulan,
     });
+
+    setIsShowOptionModal({
+      ...isShowOptionModal,
+      record: null,
+      status: false,
+    });
+
     setIsShowModal(true);
   };
 
   const onDelete = async (id) => {
+    setIsShowOptionModal({
+      ...isShowOptionModal,
+      record: null,
+      status: false,
+    });
+
     if (window.confirm("Hapus data?")) {
       await deleteDoc(doc(db, "records", id));
       loadRecord();
@@ -181,16 +187,21 @@ function Anggaran() {
     calculateTotal();
   };
 
-  const onToggleStatus = async (id, status) => {
-    try {
-      await updateDoc(doc(db, "records", id), {
-        isApprove: status,
-      });
-    } catch (err) {
-      alert(err);
-    }
-    loadRecord();
-    calculateTotal();
+  const goToDetail = (record) => {
+    navigate("/detail", { state: { data: record, month: bulan } });
+    setIsShowOptionModal({
+      ...isShowOptionModal,
+      record: null,
+      status: false,
+    });
+  };
+
+  const handleOptionModal = (record, status) => {
+    setIsShowOptionModal({
+      ...isShowOptionModal,
+      record: record,
+      status: status,
+    });
   };
 
   useEffect(() => {
@@ -237,44 +248,25 @@ function Anggaran() {
         </>
       ) : (
         <>
-          <div className="alert alert-info" role="alert">
-            <strong>Total: </strong> <span>Rp. {currencyFormat(total)}</span>
-            <br />
-            <strong className="text-danger">Sisa: </strong>{" "}
-            <span className="text-danger">
-              Rp. {currencyFormat(total - used)}
-            </span>
-          </div>
+          <AnggaranHeader total={total} used={used} />
           <hr />
-          <h4 className="text-center">Anggaran {bulan.toUpperCase()}</h4>
-          <div className="d-flex justify-content-between align-items-center px-3 mt-3">
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={onAddData}
-            >
-              Tambah
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={() => navigate("/")}
-            >
-              Kembali
-            </button>
+          <div className="d-flex justify-content-between align-items-center px-1 mb-1">
+            <div onClick={() => navigate("/")}>
+              <GoBackIcon size="xl" color={Colors.grey} />
+            </div>
+            <h6 className="text-center">{bulan.toUpperCase()}</h6>
+            <div onClick={onAddData}>
+              <AddFileIcon size="xl" color={Colors.green} />
+            </div>
           </div>
-          <hr />
           <div style={{ height: "60vh", overflow: "auto" }}>
             <ul className="p-0 m-0">
               {records.length > 0 &&
                 records.map((record, index) => (
                   <ListCard
                     key={index}
-                    month={bulan}
                     record={record}
-                    onToggleStatus={onToggleStatus}
-                    onUpdate={onUpdate}
-                    onDelete={onDelete}
+                    onEllipsisClicked={handleOptionModal}
                   />
                 ))}
             </ul>
@@ -286,6 +278,15 @@ function Anggaran() {
               updateFormData={updateFormData}
               setIsShowModal={setIsShowModal}
               onSubmit={onSubmit}
+            />
+          )}
+
+          {isShowOptionModal.status && (
+            <OptionModal
+              onClickCloseButton={() => handleOptionModal(null, false)}
+              onClickList={() => goToDetail(isShowOptionModal.record)}
+              onClickEdit={() => onUpdate(isShowOptionModal.record)}
+              onClickDelete={() => onDelete(isShowOptionModal.record.id)}
             />
           )}
         </>
