@@ -10,27 +10,24 @@ import {
 } from "components/Icons";
 import { Colors } from "constants";
 
-const AnggaranHeader = ({
-  config = null,
-  total,
-  used,
-  onBack,
-  onAdd,
-  bulan,
-}) => {
+const AnggaranHeader = ({ data, onBack, onAdd, bulan }) => {
+  const { income, carryForward, sum, used } = data;
+  const balance = sum - used;
+  const unUsed = income + carryForward - sum;
+
   return (
     <>
       <div className="row">
         <div className="col px-2">
           <div className="col alert alert-success p-1 mb-2" role="alert">
             <IncomeIcon size="1x" onClick={() => alert("update income")} />{" "}
-            <span> {config != null ? currencyFormat(config.income) : "-"}</span>
+            <span> {currencyFormat(income)}</span>
           </div>
         </div>
         <div className="col px-2">
           <div className="col alert alert-info p-1 mb-2" role="alert">
             <CarryForwardIcon size="1x" onClick={() => alert("update saldo")} />
-            <span> {config != null ? currencyFormat(config.saldo) : "-"}</span>
+            <span> {currencyFormat(carryForward)}</span>
           </div>
         </div>
       </div>
@@ -38,13 +35,12 @@ const AnggaranHeader = ({
       <div className="row">
         <div className="col px-2">
           <div className="col alert alert-danger p-1 mb-0" role="alert">
-            <BalanceIcon size="1x" />{" "}
-            <span> {config != null ? currencyFormat(total) : "-"}</span>
+            <BalanceIcon size="1x" /> <span> {currencyFormat(balance)}</span>
           </div>
         </div>
         <div className="col px-2">
           <div className="col alert alert-warning p-1 mb-0" role="alert">
-            <UnAllocatedIcon size="1x" /> <span> {currencyFormat(total)}</span>
+            <UnAllocatedIcon size="1x" /> <span> {currencyFormat(unUsed)}</span>
           </div>
         </div>
       </div>

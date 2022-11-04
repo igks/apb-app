@@ -14,8 +14,8 @@ import {
 
 export const loadConfig = async () => {
   try {
-    let docSnap = await getDoc(doc(db, "config", "1AaziUG8gGvwTPFI5CTK"));
-    let config = docSnap.data();
+    const querySnapshot = await getDocs(query(collection(db, "config")));
+    const config = querySnapshot.docs[0].data();
     return { isSuccess: true, data: config };
   } catch (err) {
     return { isSuccess: false, data: err };

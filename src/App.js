@@ -5,16 +5,16 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { db } from "./services/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import FormLogin from "./pages/FormLogin";
-import Menu from "./pages/Menu";
-import Anggaran from "./pages/Anggaran";
-import Detail from "./pages/Detail";
 
-import "./App.css";
-import Catatan from "./pages/Catatan";
-import MyChart from "./pages/Chart";
+import FormLogin from "pages/FormLogin";
+import Menu from "pages/Menu";
+import Anggaran from "pages/Anggaran";
+import Detail from "pages/Detail";
+
+import "App.css";
+import Catatan from "pages/Catatan";
+import MyChart from "pages/Chart";
+import { login } from "services/auth";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,20 +32,14 @@ function App() {
   };
 
   const onLogin = async () => {
-    try {
-      let docSnap = await getDoc(doc(db, "auth", "Kds5mdBvmZ05cRJBYmFL"));
-      let credential = docSnap.data();
-      if (
-        formLogin.email !== credential.email &&
-        formLogin.password !== credential.password
-      ) {
-        alert("Email atau password salah!");
-      } else {
-        setIsAuthenticated(true);
-      }
-    } catch (err) {
-      alert(err);
-    }
+    const { isError, error, isAuthenticated } = await login(
+      formLogin.email,
+      formLogin.password
+    );
+
+    if (!isError && isAuthenticated) setIsAuthenticated(true);
+    if (!isError && !isAuthenticated) alert("Email atau password salah!");
+    if (isError) alert(error);
   };
 
   return (

@@ -24,9 +24,13 @@ function Anggaran() {
     status: false,
   });
   const [records, setRecord] = useState([]);
-  const [config, setConfig] = useState(null);
-  const [total, setTotal] = useState(0);
-  const [used, setUsed] = useState(0);
+  const [dataHeader, setDataHeader] = useState({
+    income: 0,
+    carryForward: 0,
+    sum: 0,
+    used: 0,
+  });
+
   const [formData, setFormData] = useState({
     id: null,
     item: "",
@@ -38,7 +42,13 @@ function Anggaran() {
 
   const getConfig = async () => {
     const { isSuccess, data } = await loadConfig();
-    if (isSuccess) setConfig(data);
+    if (isSuccess) {
+      setDataHeader({
+        ...dataHeader,
+        income: data.income,
+        carryForward: data.carryForward,
+      });
+    }
   };
 
   const getAnggaran = async () => {
@@ -48,8 +58,11 @@ function Anggaran() {
 
   const getCalculation = () => {
     const { sum, used } = calculateTotal(records);
-    setTotal(sum);
-    setUsed(used);
+    setDataHeader({
+      ...dataHeader,
+      sum: sum,
+      used: used,
+    });
   };
 
   const onSubmit = async () => {
@@ -189,9 +202,7 @@ function Anggaran() {
       ) : (
         <>
           <AnggaranHeader
-            config={config}
-            total={total}
-            used={used}
+            data={dataHeader}
             onBack={() => navigate("/")}
             onAdd={onAddData}
             bulan={bulan}

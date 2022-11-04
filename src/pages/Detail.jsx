@@ -58,16 +58,19 @@ const Detail = () => {
     }
 
     let newRecord;
+    let date = new Date().getDate();
     if (record?.details?.length > 0 ?? false) {
       newRecord = {
         ...record,
         details: [
           ...record.details,
-          { item: formData.item, value: formData.value },
+          { item: formData.item, value: formData.value, tanggal: date },
         ],
       };
     } else {
-      const detail = [{ item: formData.item, value: formData.value }];
+      const detail = [
+        { item: formData.item, value: formData.value, tanggal: date },
+      ];
       newRecord = { ...record, details: detail };
     }
 
@@ -104,10 +107,6 @@ const Detail = () => {
 
   useEffect(() => {
     if (state.data != null) {
-      const objectDetails = _.groupBy(state.data.details, (detail) => {
-        return detail.tanggal;
-      });
-      setCompiledDetails(objectDetails);
       setRecord(state.data);
     }
   }, [state]);
@@ -119,6 +118,13 @@ const Detail = () => {
         newUsedValue += item.value;
       });
       setUsed(newUsedValue);
+    }
+
+    if (record != null) {
+      const objectDetails = _.groupBy(record.details, (detail) => {
+        return detail.tanggal;
+      });
+      setCompiledDetails(objectDetails);
     }
   }, [record]);
 
