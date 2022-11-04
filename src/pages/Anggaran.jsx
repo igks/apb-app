@@ -1,24 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { db } from "../services/firebase";
+import FormModal from "components/FormModal";
+
+import AnggaranHeader from "components/anggaran/AnggaranHeader";
+import OptionModal from "components/OptionModal";
+import SelectMonth from "components/anggaran/SelectMonth";
 import {
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-  deleteDoc,
-  query,
-  getDocs,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import ListCard from "../components/ListCard";
-import FormModal from "../components/FormModal";
-import { AddFileIcon, GoBackIcon } from "../components/Icons";
-import { Colors, optionBulan } from "../constants";
-import AnggaranHeader from "../components/AnggaranHeader";
-import OptionModal from "../components/OptionModal";
-import { mock, compileRecord } from "../services/mock";
+  addAnggaran,
+  calculateTotal,
+  deleteAnggaran,
+  loadAnggaranList,
+  loadConfig,
+} from "services/anggaran";
+import AnggaranList from "components/anggaran/AnggaranList";
 
 function Anggaran() {
   const navigate = useNavigate();
@@ -30,6 +24,7 @@ function Anggaran() {
     status: false,
   });
   const [records, setRecord] = useState([]);
+  const [config, setConfig] = useState(null);
   const [total, setTotal] = useState(0);
   const [used, setUsed] = useState(0);
   const [formData, setFormData] = useState({
@@ -41,70 +36,33 @@ function Anggaran() {
   });
   const [bulan, setBulan] = useState("Pilih bulan");
 
-  const loadRecord = async () => {
-    const q = query(
-      collection(db, "records"),
-      where("bulan", "==", bulan),
-      orderBy("item")
-    );
-    const querySnapshot = await getDocs(q);
-    const newRecords = [];
-    querySnapshot.forEach((doc) => {
-      let data = doc.data();
-
-      newRecords.push({
-        id: doc.id,
-        item: data.item,
-        value: data.value,
-        isApprove: data.isApprove,
-        details: data.details,
-        bulan: data.bulan,
-      });
-    });
-
-    setRecord(newRecords);
+  const getConfig = async () => {
+    const { isSuccess, data } = await loadConfig();
+    if (isSuccess) setConfig(data);
   };
 
-  const calculateTotal = () => {
-    let sum = 0;
-    let used = 0;
-    records.forEach((record) => {
-      if (record.isApprove) {
-        sum += record.value;
-        if (record?.details?.length > 0 ?? false) {
-          record.details.forEach((detail) => {
-            used += detail.value;
-          });
-        }
-      }
-    });
+  const getAnggaran = async () => {
+    const records = await loadAnggaranList(bulan);
+    setRecord(records);
+  };
 
+  const getCalculation = () => {
+    const { sum, used } = calculateTotal(records);
     setTotal(sum);
     setUsed(used);
   };
 
   const onSubmit = async () => {
-    if (formData.item === "" || formData.value < 0) {
-      setIsShowModal(false);
+    const { isValid, error } = await addAnggaran(formData);
+
+    if (!isValid) {
       alert("Data tidak valid!");
-      return;
+      setIsShowModal(false);
     }
 
-    if (formData.id != null) {
-      try {
-        await updateDoc(doc(db, "records", `${formData.id}`), {
-          item: formData.item,
-          value: formData.value,
-        });
-      } catch (err) {
-        alert(err);
-      }
-    } else {
-      try {
-        await addDoc(collection(db, "records"), formData);
-      } catch (err) {
-        alert(err);
-      }
+    if (error) {
+      alert(error);
+      setIsShowModal(false);
     }
 
     setFormData({
@@ -116,7 +74,7 @@ function Anggaran() {
       details: [],
     });
     setIsShowModal(false);
-    loadRecord();
+    getAnggaran();
   };
 
   const updateFormData = (e) => {
@@ -181,10 +139,12 @@ function Anggaran() {
     });
 
     if (window.confirm("Hapus data?")) {
-      await deleteDoc(doc(db, "records", id));
-      loadRecord();
+      const isSuccess = await deleteAnggaran(id);
+      if (isSuccess) {
+        getAnggaran();
+        getCalculation();
+      }
     }
-    calculateTotal();
   };
 
   const goToDetail = (record) => {
@@ -205,12 +165,13 @@ function Anggaran() {
   };
 
   useEffect(() => {
-    loadRecord();
+    getAnggaran();
+    getConfig();
     // eslint-disable-next-line
   }, [bulan]);
 
   useEffect(() => {
-    calculateTotal();
+    getCalculation();
     // eslint-disable-next-line
   }, [records]);
 
@@ -224,53 +185,22 @@ function Anggaran() {
   return (
     <div className="container">
       {bulan === "Pilih bulan" ? (
-        <>
-          <div style={{ width: "100%" }}>
-            <select
-              style={{
-                width: "100%",
-                height: 50,
-                fontSize: 16,
-                padding: 10,
-                border: "1px solid grey",
-                borderRadius: 10,
-                backgroundColor: "white",
-              }}
-              onChange={(e) => setBulan(e.target.value)}
-            >
-              {optionBulan.map((bln) => (
-                <option key={bln} value={bln.toLowerCase()}>
-                  {bln}
-                </option>
-              ))}
-            </select>
-          </div>
-        </>
+        <SelectMonth onSetMonth={setBulan} />
       ) : (
         <>
-          <AnggaranHeader total={total} used={used} />
-          <hr />
-          <div className="d-flex justify-content-between align-items-center px-1 mb-1">
-            <div onClick={() => navigate("/")}>
-              <GoBackIcon size="xl" color={Colors.grey} />
-            </div>
-            <h6 className="text-center">{bulan.toUpperCase()}</h6>
-            <div onClick={onAddData}>
-              <AddFileIcon size="xl" color={Colors.green} />
-            </div>
-          </div>
-          <div style={{ height: "60vh", overflow: "auto" }}>
-            <ul className="p-0 m-0">
-              {records.length > 0 &&
-                records.map((record, index) => (
-                  <ListCard
-                    key={index}
-                    record={record}
-                    onEllipsisClicked={handleOptionModal}
-                  />
-                ))}
-            </ul>
-          </div>
+          <AnggaranHeader
+            config={config}
+            total={total}
+            used={used}
+            onBack={() => navigate("/")}
+            onAdd={onAddData}
+            bulan={bulan}
+          />
+
+          <AnggaranList
+            records={records}
+            handleOptionModal={handleOptionModal}
+          />
 
           {isShowModal && (
             <FormModal
