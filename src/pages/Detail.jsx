@@ -19,6 +19,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const [record, setRecord] = useState(null);
   const [compiledDetails, setCompiledDetails] = useState([]);
+  const [keyReference, setSetKeyReference] = useState([]);
   const [used, setUsed] = useState(0);
   const [isShowModal, setIsShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -118,13 +119,17 @@ const Detail = () => {
         newUsedValue += item.value;
       });
       setUsed(newUsedValue);
+    } else {
+      setUsed(0);
     }
 
     if (record != null) {
       const objectDetails = _.groupBy(record.details, (detail) => {
         return detail.tanggal;
       });
+      const sortedDetails = Object.keys(objectDetails).sort((a, b) => b - a);
       setCompiledDetails(objectDetails);
+      setSetKeyReference(sortedDetails);
     }
   }, [record]);
 
@@ -165,8 +170,8 @@ const Detail = () => {
             </div>
           </div>
 
-          {Object.keys(compiledDetails).length > 0 &&
-            Object.keys(compiledDetails).map((key) => (
+          {keyReference.length > 0 &&
+            keyReference.map((key) => (
               <div key={key} className="mb-2">
                 <small>Tanggal : {key}</small>
                 <hr className="m-0 mb-2" />
