@@ -13,6 +13,7 @@ import {
   faTrashCan,
   faList,
   faRectangleXmark,
+  faGears,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const AddFileIcon = (props) => (
@@ -63,4 +64,8 @@ export const EllipsisIcon = (props) => (
 
 export const CloseIcon = (props) => (
   <FontAwesomeIcon icon={faRectangleXmark} {...props} />
+);
+
+export const SettingIcon = (props) => (
+  <FontAwesomeIcon icon={faGears} {...props} />
 );

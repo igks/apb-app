@@ -16,9 +16,22 @@ export const loadConfig = async () => {
   try {
     const querySnapshot = await getDocs(query(collection(db, "config")));
     const config = querySnapshot.docs[0].data();
+    config.id = querySnapshot.docs[0].id;
     return { isSuccess: true, data: config };
   } catch (err) {
     return { isSuccess: false, data: err };
+  }
+};
+
+export const updateConfig = async (formData) => {
+  try {
+    await updateDoc(doc(db, "config", formData.id), {
+      income: formData.income,
+      carryForward: formData.carryForward,
+    });
+    return { isSuccess: true };
+  } catch (err) {
+    return { isSuccess: false, error: err };
   }
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import FormModal from "components/FormModal";
+import FormModal from "components/forms/FormModal";
 
 import AnggaranHeader from "components/anggaran/AnggaranHeader";
 import OptionModal from "components/OptionModal";
@@ -9,27 +10,29 @@ import {
   addAnggaran,
   calculateTotal,
   deleteAnggaran,
-  loadAnggaranList,
-  loadConfig,
+  updateConfig,
 } from "services/anggaran";
 import AnggaranList from "components/anggaran/AnggaranList";
+import {
+  GET_ANGGARAN_HEADER_REQUESTED,
+  GET_ANGGARAN_REQUESTED,
+} from "redux/actions/anggaran-action";
+import FormConfig from "components/forms/FormConfig";
 
-function Anggaran() {
+const Anggaran = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const dispatch = useDispatch();
+  const { config, list } = useSelector((state) => state.anggaran);
+  const { id, income, carryForward } = !config.isFetching && config.data;
 
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowFormConfig, setIsShowFormConfig] = useState(false);
   const [isShowOptionModal, setIsShowOptionModal] = useState({
     record: null,
     status: false,
   });
   const [records, setRecord] = useState([]);
-  const [dataHeader, setDataHeader] = useState({
-    income: 0,
-    carryForward: 0,
-    sum: 0,
-    used: 0,
-  });
 
   const [formData, setFormData] = useState({
     id: null,
@@ -40,28 +43,57 @@ function Anggaran() {
   });
   const [bulan, setBulan] = useState("Pilih bulan");
 
-  const getConfig = async () => {
-    const { isSuccess, data } = await loadConfig();
-    if (isSuccess) {
-      setDataHeader({
-        ...dataHeader,
-        income: data.income,
-        carryForward: data.carryForward,
+  const [formConfig, setFormConfig] = useState({
+    id: id,
+    income: income,
+    carryForward: carryForward,
+  });
+
+  const updateFormConfig = (e) => {
+    let targetName = e.target.name;
+    let parsed = parseInt(e.target.value);
+    if (isNaN(parsed)) {
+      setFormConfig({
+        ...formConfig,
+        [targetName]: 0,
+      });
+    } else {
+      setFormConfig({
+        ...formConfig,
+        [targetName]: parsed,
       });
     }
   };
 
-  const getAnggaran = async () => {
-    const records = await loadAnggaranList(bulan);
-    setRecord(records);
+  const submitConfig = async () => {
+    const { isSuccess, error } = await updateConfig(formConfig);
+    if (!isSuccess) {
+      alert(error);
+    }
+    setIsShowFormConfig(false);
+    dispatch({
+      type: GET_ANGGARAN_HEADER_REQUESTED,
+      payload: {
+        records: list.data,
+      },
+    });
   };
 
-  const getCalculation = () => {
-    const { sum, used } = calculateTotal(records);
-    setDataHeader({
-      ...dataHeader,
-      sum: sum,
-      used: used,
+  const getAnggaran = async () => {
+    dispatch({
+      type: GET_ANGGARAN_REQUESTED,
+      payload: {
+        bulan: bulan,
+      },
+    });
+  };
+
+  const updateHeader = () => {
+    dispatch({
+      type: GET_ANGGARAN_HEADER_REQUESTED,
+      payload: {
+        records: list.data,
+      },
     });
   };
 
@@ -155,7 +187,7 @@ function Anggaran() {
       const isSuccess = await deleteAnggaran(id);
       if (isSuccess) {
         getAnggaran();
-        getCalculation();
+        updateHeader();
       }
     }
   };
@@ -178,13 +210,20 @@ function Anggaran() {
   };
 
   useEffect(() => {
-    getAnggaran();
-    getConfig();
+    setFormConfig({
+      id: id,
+      income: income,
+      carryForward: carryForward,
+    });
+  }, [config]);
+
+  useEffect(() => {
+    if (bulan !== "Pilih bulan") getAnggaran();
     // eslint-disable-next-line
   }, [bulan]);
 
   useEffect(() => {
-    getCalculation();
+    updateHeader();
     // eslint-disable-next-line
   }, [records]);
 
@@ -199,17 +238,19 @@ function Anggaran() {
     <div className="container">
       {bulan === "Pilih bulan" ? (
         <SelectMonth onSetMonth={setBulan} />
+      ) : list.isFetching ? (
+        <h5>Loading...</h5>
       ) : (
         <>
           <AnggaranHeader
-            data={dataHeader}
             onBack={() => navigate("/")}
             onAdd={onAddData}
             bulan={bulan}
+            setIsShowFormConfig={setIsShowFormConfig}
           />
 
           <AnggaranList
-            records={records}
+            records={list.data}
             handleOptionModal={handleOptionModal}
           />
 
@@ -230,10 +271,19 @@ function Anggaran() {
               onClickDelete={() => onDelete(isShowOptionModal.record.id)}
             />
           )}
+
+          {isShowFormConfig && (
+            <FormConfig
+              formData={formConfig}
+              updateFormData={updateFormConfig}
+              setIsShowModal={setIsShowFormConfig}
+              onSubmit={submitConfig}
+            />
+          )}
         </>
       )}
     </div>
   );
-}
+};
 
 export default Anggaran;

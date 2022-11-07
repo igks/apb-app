@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import FormModal from "../components/FormModal";
+import FormModal from "../components/forms/FormModal";
 import { currencyFormat } from "../helpers/currency-format";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../services/firebase";

@@ -9,7 +9,7 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
-import FormNote from "../components/FormNote";
+import FormNote from "../components/forms/FormNote";
 import Note from "../components/Note";
 
 function Catatan() {

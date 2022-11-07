@@ -3,7 +3,7 @@ import ListCard from "components/ListCard";
 
 const AnggaranList = ({ records, handleOptionModal }) => {
   return (
-    <div style={{ height: "60vh", overflow: "auto" }}>
+    <div style={{ height: "60vh", overflow: "auto", zIndex: -1 }}>
       <ul className="p-0 m-0">
         {records.length > 0 &&
           records.map((record, index) => (
