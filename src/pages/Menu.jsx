@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+// import { executeUpdate } from "services/mock";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ const Menu = () => {
         >
           GRAFIK
         </div> */}
+        {/* <button onClick={executeUpdate}>Execute Update</button> */}
       </div>
     </>
   );

@@ -1,3 +1,18 @@
+import { db } from "../services/firebase";
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  getDocs,
+  where,
+  orderBy,
+} from "firebase/firestore";
+
 export const mock = [
   {
     id: "1X1KBq1W6cBUDbC0BQuG",
@@ -3662,15 +3677,52 @@ export const mock = [
 
 export const compileRecord = (records) => {
   const newRecords = [];
-  records.map((record) => {
+  records.forEach((record) => {
     const newDetails = [];
-    record.details.map((detail) => {
-      let d = Math.floor(Math.random() * (5 - 1) + 1);
-      newDetails.push({ ...detail, tanggal: d });
+    record.details.forEach((detail) => {
+      let d = new Date();
+      newDetails.push({ ...detail, tanggal: d.getDate() });
     });
 
     newRecords.push({ ...record, details: newDetails });
   });
 
   return newRecords;
+};
+
+export const getRecords = async () => {
+  const q = query(collection(db, "records"));
+  const querySnapshot = await getDocs(q);
+  const records = [];
+  querySnapshot.forEach((doc) => {
+    let data = doc.data();
+    records.push({
+      id: doc.id,
+      item: data.item,
+      value: data.value,
+      isApprove: data.isApprove,
+      details: data.details,
+      bulan: data.bulan,
+    });
+  });
+  return records;
+};
+
+export const updateRecord = (record) => {
+  const newDetails = [];
+  record.details.forEach((detail) => {
+    let d = new Date();
+    newDetails.push({ ...detail, tanggal: d.getDate() });
+  });
+
+  return { ...record, details: newDetails };
+};
+
+export const executeUpdate = async () => {
+  const org = await getRecords();
+  org.forEach(async (data) => {
+    const updated = updateRecord(data);
+    await setDoc(doc(db, "records", data.id), updated);
+    console.log(data.id + " updated");
+  });
 };
