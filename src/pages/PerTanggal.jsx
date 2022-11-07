@@ -69,28 +69,29 @@ const PerTanggal = () => {
         </div>
       </div>
       <hr />
-
-      {details.length > 0
-        ? details.map((detail, index) => (
-            <div
-              key={`detail_${index}`}
-              className="alert alert-warning p-1 mb-2 d-flex flex-row justify-content-between align-items-center px-2"
-            >
-              <div className="d-flex flex-column justify-content-between">
-                <div>
-                  <small className="p-0 m-0">{detail.item}</small>
-                </div>
-                <div>
-                  <small className="m-0 p-0">
-                    {currencyFormat(detail.value)}
-                  </small>
+      <div style={{ height: "60vh", overflow: "auto" }}>
+        {details.length > 0
+          ? details.map((detail, index) => (
+              <div
+                key={`detail_${index}`}
+                className="alert alert-warning p-1 mb-2 d-flex flex-row justify-content-between align-items-center px-2"
+              >
+                <div className="d-flex flex-column justify-content-between">
+                  <div>
+                    <small className="p-0 m-0">{detail.item}</small>
+                  </div>
+                  <div>
+                    <small className="m-0 p-0">
+                      {currencyFormat(detail.value)}
+                    </small>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        : tanggal != null && (
-            <div className="alert alert-info">Tidak ada pengeluaran!!!</div>
-          )}
+            ))
+          : tanggal != null && (
+              <div className="alert alert-info">Tidak ada pengeluaran!!!</div>
+            )}
+      </div>
     </div>
   );
 };
