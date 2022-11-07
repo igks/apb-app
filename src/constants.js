@@ -20,3 +20,8 @@ export const optionBulan = [
   "Nopember",
   "Desember",
 ];
+
+export const optionTanggal = [
+  "Pilih tanggal",
+  ...new Array(31).fill(1).map((_, i) => i + 1),
+];

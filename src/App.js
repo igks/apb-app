@@ -15,8 +15,9 @@ import Detail from "pages/Detail";
 import "App.css";
 import Catatan from "pages/Catatan";
 import MyChart from "pages/Chart";
-import { login } from "services/auth";
+import PerTanggal from "pages/PerTanggal";
 
+import { login } from "services/auth";
 import store from "redux/store";
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
                   <Route path="/anggaran" element={<Anggaran />}></Route>
                   <Route path="/detail" element={<Detail />}></Route>
                   <Route path="/catatan" element={<Catatan />}></Route>
+                  <Route path="/pertanggal" element={<PerTanggal />}></Route>
+
                   <Route path="/chart" element={<MyChart />}></Route>
 
                   <Route path="*" element={<Navigate to="/" replace />} />

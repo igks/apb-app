@@ -36,7 +36,7 @@ const Menu = () => {
             color: "#555",
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/pertanggal")}
         >
           PENGELUARAN TANGAL TERTENTU
         </div>

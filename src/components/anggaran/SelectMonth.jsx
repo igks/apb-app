@@ -1,27 +1,28 @@
 import React from "react";
-import { optionBulan } from "../../constants";
+import { optionBulan } from "constants";
 
 const SelectMonth = ({ onSetMonth }) => {
+  const bulanOnChange = (e) => {
+    const value = e.target.value;
+    const d = new Date(value);
+    const month = d.getMonth();
+    const monthString = optionBulan[month + 1].toLowerCase();
+    onSetMonth(monthString);
+  };
+
   return (
-    <div style={{ width: "100%" }}>
-      <select
-        style={{
-          width: "100%",
-          height: 50,
-          fontSize: 16,
-          padding: 10,
-          border: "1px solid grey",
-          borderRadius: 10,
-          backgroundColor: "white",
-        }}
-        onChange={(e) => onSetMonth(e.target.value)}
-      >
-        {optionBulan.map((bln) => (
-          <option key={bln} value={bln.toLowerCase()}>
-            {bln}
-          </option>
-        ))}
-      </select>
+    <div className="row g-3 align-items-center justify-content-between mb-3">
+      <div className="col-auto">
+        <label className="col-form-label">Pilih bulan</label>
+      </div>
+      <div className="col-auto">
+        <input
+          type="month"
+          id="month"
+          className="form-control"
+          onChange={bulanOnChange}
+        />
+      </div>
     </div>
   );
 };
