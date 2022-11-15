@@ -19,6 +19,7 @@ import PerTanggal from "pages/PerTanggal";
 
 import { login } from "services/auth";
 import store from "redux/store";
+import GraphHarian from "pages/GraphHarian";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -69,6 +70,7 @@ function App() {
                   <Route path="/detail" element={<Detail />}></Route>
                   <Route path="/catatan" element={<Catatan />}></Route>
                   <Route path="/pertanggal" element={<PerTanggal />}></Route>
+                  <Route path="/graph-harian" element={<GraphHarian />}></Route>
 
                   <Route path="/chart" element={<MyChart />}></Route>
 

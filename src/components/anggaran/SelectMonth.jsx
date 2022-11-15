@@ -12,10 +12,10 @@ const SelectMonth = ({ onSetMonth }) => {
 
   return (
     <div className="row g-3 align-items-center justify-content-between mb-3">
-      <div className="col-auto">
+      <div className="col">
         <label className="col-form-label">Pilih bulan</label>
       </div>
-      <div className="col-auto">
+      <div className="col-8 ">
         <input
           type="month"
           id="month"

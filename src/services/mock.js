@@ -12,6 +12,7 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 export const mock = [
   {
@@ -3718,11 +3719,26 @@ export const updateRecord = (record) => {
   return { ...record, details: newDetails };
 };
 
+export const updateIdRecord = (record) => {
+  const newDetails = [];
+  record.details.forEach((detail) => {
+    let id = uuidv4();
+    newDetails.push({ id, ...detail });
+  });
+
+  return { ...record, details: newDetails };
+};
+
 export const executeUpdate = async () => {
   const org = await getRecords();
   org.forEach(async (data) => {
-    const updated = updateRecord(data);
+    const updated = updateIdRecord(data);
     await setDoc(doc(db, "records", data.id), updated);
     console.log(data.id + " updated");
   });
+  // org.forEach(async (data) => {
+  //   const updated = updateRecord(data);
+  //   await setDoc(doc(db, "records", data.id), updated);
+  //   console.log(data.id + " updated");
+  // });
 };

@@ -59,7 +59,7 @@ const PerTanggal = () => {
         <div className="col-auto">
           <label className="col-form-label">Pilih tanggal</label>
         </div>
-        <div className="col-auto">
+        <div className="col-8">
           <input
             type="date"
             id="date"

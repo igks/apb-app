@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// import { executeUpdate } from "services/mock";
+import { executeUpdate } from "services/mock";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -40,6 +40,17 @@ const Menu = () => {
           onClick={() => navigate("/pertanggal")}
         >
           PENGELUARAN TANGAL TERTENTU
+        </div>
+        <div
+          className="alert alert-info"
+          style={{
+            textDecoration: "none",
+            color: "#555",
+            fontWeight: "bold",
+          }}
+          onClick={() => navigate("/graph-harian")}
+        >
+          GRAPH HARIAN
         </div>
         {/* <div
           className="alert alert-info"

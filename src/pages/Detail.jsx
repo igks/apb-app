@@ -13,6 +13,7 @@ import {
 } from "../components/Icons";
 import { Colors } from "../constants";
 import _ from "lodash";
+import { v4 as uuidv4 } from "uuid";
 
 const Detail = () => {
   const { state } = useLocation();
@@ -60,17 +61,18 @@ const Detail = () => {
 
     let newRecord;
     let date = new Date().getDate();
+    let id = uuidv4();
     if (record?.details?.length > 0 ?? false) {
       newRecord = {
         ...record,
         details: [
           ...record.details,
-          { item: formData.item, value: formData.value, tanggal: date },
+          { id, item: formData.item, value: formData.value, tanggal: date },
         ],
       };
     } else {
       const detail = [
-        { item: formData.item, value: formData.value, tanggal: date },
+        { id, item: formData.item, value: formData.value, tanggal: date },
       ];
       newRecord = { ...record, details: detail };
     }
@@ -90,12 +92,9 @@ const Detail = () => {
     setIsShowModal(false);
   };
 
-  const onDeleteDetail = async (index) => {
+  const onDeleteDetail = async (id) => {
     if (window.confirm("Yakin ingin dihapus?")) {
-      const newDetails = [];
-      record.details.forEach((detail, i) => {
-        if (i != index) newDetails.push(detail);
-      });
+      const newDetails = record.details.filter((detail) => detail.id != id);
       const newRecord = { ...record, details: newDetails };
       try {
         await setDoc(doc(db, "records", `${record.id}`), newRecord);
@@ -193,7 +192,7 @@ const Detail = () => {
                     <DeleteIcon
                       color={Colors.red}
                       size="lg"
-                      onClick={() => onDeleteDetail(index)}
+                      onClick={() => onDeleteDetail(detail.id)}
                     />
                   </div>
                 ))}
