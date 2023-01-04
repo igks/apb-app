@@ -5,5 +5,4 @@ export const currencyFormat = (value) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
-  // return `Rp. ${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 };
