@@ -18,11 +18,13 @@ import {
   GET_ANGGARAN_REQUESTED,
 } from "redux/actions/anggaran-action";
 import FormConfig from "components/forms/FormConfig";
+import * as S from "./styled.component";
+import Spinner from "components/shared/Spinner";
 
 const Anggaran = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
   const dispatch = useDispatch();
+  const { state } = useLocation();
   const { config, list } = useSelector((state) => state.anggaran);
   const { id, income, carryForward } = !config.isFetching && config.data;
 
@@ -233,56 +235,62 @@ const Anggaran = () => {
     }
     // eslint-disable-next-line
   }, [state]);
-
   return (
-    <div className="container">
+    <>
       {bulan === "Pilih bulan" ? (
         <SelectMonth onSetMonth={setBulan} />
-      ) : list.isFetching ? (
-        <h5>Loading...</h5>
       ) : (
-        <>
-          <AnggaranHeader
-            onBack={() => navigate("/")}
-            onAdd={onAddData}
-            bulan={bulan}
-            setIsShowFormConfig={setIsShowFormConfig}
-          />
+        <S.Container>
+          {list.isFetching ? (
+            <Spinner />
+          ) : (
+            <>
+              <S.Header>
+                <AnggaranHeader
+                  onBack={() => navigate("/")}
+                  onAdd={onAddData}
+                  bulan={bulan}
+                  setIsShowFormConfig={setIsShowFormConfig}
+                />
+              </S.Header>
+              <S.Body>
+                <AnggaranList
+                  records={list.data}
+                  handleOptionModal={handleOptionModal}
+                />
 
-          <AnggaranList
-            records={list.data}
-            handleOptionModal={handleOptionModal}
-          />
+                {isShowModal && (
+                  <FormModal
+                    formData={formData}
+                    updateFormData={updateFormData}
+                    setIsShowModal={setIsShowModal}
+                    onSubmit={onSubmit}
+                  />
+                )}
 
-          {isShowModal && (
-            <FormModal
-              formData={formData}
-              updateFormData={updateFormData}
-              setIsShowModal={setIsShowModal}
-              onSubmit={onSubmit}
-            />
+                {isShowOptionModal.status && (
+                  <OptionModal
+                    onClickCloseButton={() => handleOptionModal(null, false)}
+                    onClickList={() => goToDetail(isShowOptionModal.record)}
+                    onClickEdit={() => onUpdate(isShowOptionModal.record)}
+                    onClickDelete={() => onDelete(isShowOptionModal.record.id)}
+                  />
+                )}
+
+                {isShowFormConfig && (
+                  <FormConfig
+                    formData={formConfig}
+                    updateFormData={updateFormConfig}
+                    setIsShowModal={setIsShowFormConfig}
+                    onSubmit={submitConfig}
+                  />
+                )}
+              </S.Body>
+            </>
           )}
-
-          {isShowOptionModal.status && (
-            <OptionModal
-              onClickCloseButton={() => handleOptionModal(null, false)}
-              onClickList={() => goToDetail(isShowOptionModal.record)}
-              onClickEdit={() => onUpdate(isShowOptionModal.record)}
-              onClickDelete={() => onDelete(isShowOptionModal.record.id)}
-            />
-          )}
-
-          {isShowFormConfig && (
-            <FormConfig
-              formData={formConfig}
-              updateFormData={updateFormConfig}
-              setIsShowModal={setIsShowFormConfig}
-              onSubmit={submitConfig}
-            />
-          )}
-        </>
+        </S.Container>
       )}
-    </div>
+    </>
   );
 };
 

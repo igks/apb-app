@@ -15,9 +15,11 @@ export const Body = styled.div`
 
 export const Header = styled.div`
   padding: 10px;
+  padding-bottom: 0;
 `;
 export const Content = styled.div`
   flex-grow: 1;
   overflow: auto;
   padding: 10px;
+  padding-top: 0;
 `;
