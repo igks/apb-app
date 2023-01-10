@@ -14,7 +14,7 @@ import {
 import { Colors } from "constants";
 import { updateConfig } from "services/anggaran";
 import * as S from "./styled.component";
-import Spinner from "components/commons/Spinner";
+import Spinner from "components/shared/Spinner";
 
 const AnggaranHeader = ({
   data,
