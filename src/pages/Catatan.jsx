@@ -11,6 +11,10 @@ import {
 } from "firebase/firestore";
 import FormNote from "../components/forms/FormNote";
 import Note from "../components/note";
+import * as S from "./styled.component";
+import { AddFileIcon, GoBackIcon } from "components/shared/Icons";
+import { Colors } from "../constants";
+import LoadingFallback from "components/shared/LoadingFallback";
 
 function Catatan() {
   const navigate = useNavigate();
@@ -93,45 +97,35 @@ function Catatan() {
   }, []);
 
   return (
-    <div className="container">
-      <>
-        <div className="row">
-          <div className="col-12">
-            <h4 className="text-center">Catatan</h4>
-          </div>
-          <div className="col-12 mt-3">
-            <div className="d-flex justify-content-between align-items-center px-3">
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-                onClick={onAddNote}
-              >
-                Tambah
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => navigate("/")}
-              >
-                Kembali
-              </button>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div style={{ height: "70vh", overflow: "auto" }}>
-          <ul className="p-0 m-0">
-            {notes.length > 0 ? (
-              notes.map((note, index) => (
-                <Note key={index} note={note} onDelete={onDelete} />
-              ))
-            ) : isLoading ? (
-              <div className="text-center mt-5">Memuat catatan...</div>
-            ) : (
-              <div className="text-center mt-5">Tidak ada catatan!</div>
-            )}
-          </ul>
-        </div>
+    <S.Container>
+      <S.Header>
+        <S.Row mb={"10px"}>
+          <GoBackIcon
+            size="xl"
+            color={Colors.grey}
+            onClick={() => navigate("/")}
+          />
+          <S.Title>CATATAN</S.Title>
+          <AddFileIcon size="xl" color={Colors.green} onClick={onAddNote} />
+        </S.Row>
+        <S.Divider />
+      </S.Header>
+      <S.Body>
+        {isLoading ? (
+          <S.Container>
+            <LoadingFallback />
+          </S.Container>
+        ) : notes.length > 0 ? (
+          <S.List>
+            {notes.map((note, index) => (
+              <Note key={index} note={note} onDelete={onDelete} />
+            ))}
+          </S.List>
+        ) : (
+          <S.Container>
+            <S.EmptyNote>Tidak ada catatan!</S.EmptyNote>
+          </S.Container>
+        )}
 
         {isShowModal && (
           <FormNote
@@ -141,8 +135,8 @@ function Catatan() {
             onSubmit={onSubmit}
           />
         )}
-      </>
-    </div>
+      </S.Body>
+    </S.Container>
   );
 }
 
