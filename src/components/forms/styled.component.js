@@ -58,4 +58,5 @@ export const Button = styled.button`
   border: none;
   color: white;
   padding: 3px 15px;
+  width: 40%;
 `;
