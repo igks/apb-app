@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import FormModal from "components/forms/FormModal";
 
 import AnggaranHeader from "components/anggaran/AnggaranHeader";
-import OptionModal from "components/OptionModal";
+import OptionModal from "components/shared/OptionModal";
 import SelectMonth from "components/anggaran/SelectMonth";
 import {
   addAnggaran,
