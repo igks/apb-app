@@ -1,68 +1,47 @@
 import React from "react";
+import * as S from "./styled.component";
 
 const FormConfig = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <div className="mx-2 w-100">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Update Config</h5>
-          </div>
-
-          <div className="px-3 mb-3">
-            <p className="p-0 m-0">Income</p>
-            <input
-              className="form-control form-control-sm"
+    <S.Container onClick={() => setIsShowModal(false)}>
+      <S.Modal>
+        <S.Header>Update Config</S.Header>
+        <S.Body>
+          <S.Form>
+            <S.Label>Income</S.Label>
+            <S.Input
               type="number"
               value={formData.income}
               name="income"
               autoComplete="off"
               onChange={(e) => updateFormData(e)}
             />
-          </div>
-
-          <div className="px-3 mb-3">
-            <p className="p-0 m-0">Balance</p>
-            <input
-              className="form-control form-control-sm"
+          </S.Form>
+          <S.Form>
+            <S.Label>Balance</S.Label>
+            <S.Input
               type="number"
               value={formData.carryForward}
               name="carryForward"
               autoComplete="off"
               onChange={(e) => updateFormData(e)}
             />
-          </div>
-
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => setIsShowModal(false)}
-            >
-              Tutup
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={onSubmit}
-            >
-              Simpan
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </S.Form>
+        </S.Body>
+        <S.Footer>
+          <S.Button
+            type="button"
+            onClick={() => setIsShowModal(false)}
+            color={"#f44336"}
+          >
+            Tutup
+          </S.Button>
+          <S.Button type="button" onClick={onSubmit} color={"#4caf50"}>
+            Simpan
+          </S.Button>
+        </S.Footer>
+      </S.Modal>
+    </S.Container>
   );
 };
 
