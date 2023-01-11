@@ -19,7 +19,7 @@ import {
 } from "redux/actions/anggaran-action";
 import FormConfig from "components/forms/FormConfig";
 import * as S from "./styled.component";
-import Spinner from "components/shared/Spinner";
+import LoadingFallback from "components/shared/LoadingFallback";
 
 const Anggaran = () => {
   const navigate = useNavigate();
@@ -242,7 +242,7 @@ const Anggaran = () => {
       ) : (
         <S.Container>
           {list.isFetching ? (
-            <Spinner />
+            <LoadingFallback />
           ) : (
             <>
               <S.Header>

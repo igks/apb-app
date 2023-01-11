@@ -14,7 +14,7 @@ import {
 import { Colors } from "constants";
 import { updateConfig } from "services/anggaran";
 import * as S from "./styled.component";
-import Spinner from "components/shared/Spinner";
+import LoadingFallback from "components/shared/LoadingFallback";
 
 const AnggaranHeader = ({
   data,
@@ -55,7 +55,7 @@ const AnggaranHeader = ({
   return (
     <>
       {config.isFetching ? (
-        <Spinner loading={config.isFetching} />
+        <LoadingFallback loading={config.isFetching} />
       ) : (
         <>
           <S.Row mb="5px">
