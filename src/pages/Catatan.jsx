@@ -10,7 +10,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import FormNote from "../components/forms/FormNote";
-import Note from "../components/Note";
+import Note from "../components/note";
 
 function Catatan() {
   const navigate = useNavigate();
