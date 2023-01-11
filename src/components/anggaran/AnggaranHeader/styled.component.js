@@ -23,4 +23,5 @@ export const Divider = styled.hr`
 export const Title = styled.h6`
   text-align: center;
   margin: 0;
+  font-weight: bold;
 `;

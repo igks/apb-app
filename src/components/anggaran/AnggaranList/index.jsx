@@ -1,6 +1,6 @@
 import React from "react";
-import ListCard from "components/ListCard";
 import * as S from "./styled.component";
+import ListCard from "./ListCard";
 
 const AnggaranList = ({ records, handleOptionModal }) => {
   return (
