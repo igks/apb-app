@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { currencyFormat } from "../../../helpers/currency-format";
-import { EllipsisIcon, RemainIcon, WalletIcon } from "../../Icons";
+import { EllipsisIcon, RemainIcon, WalletIcon } from "components/shared/Icons";
 import { Colors } from "../../../constants";
 import * as S from "./styled.component";
 

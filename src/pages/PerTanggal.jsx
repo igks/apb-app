@@ -1,4 +1,4 @@
-import { GoBackIcon, RemainIcon } from "components/Icons";
+import { GoBackIcon, RemainIcon } from "components/shared/Icons";
 import { Colors } from "constants";
 import { optionBulan } from "constants";
 import { currencyFormat } from "helpers/currency-format";
