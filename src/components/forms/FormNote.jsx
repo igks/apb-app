@@ -1,67 +1,48 @@
 import React from "react";
+import * as S from "./styled.component";
 
 const FormNote = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <div className="mx-2 w-100">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Tambah catatan </h5>
-          </div>
-
-          <div className="px-3 mb-3">
-            <p className="p-0 m-0">Judul</p>
-            <input
-              className="form-control form-control-sm"
-              type="text"
-              value={formData.titla}
-              name="title"
-              autoComplete="off"
-              onChange={(e) => updateFormData(e)}
-            />
-          </div>
-
-          <div className="px-3 mb-3">
-            <p className="p-0 m-0">Detail</p>
-            <textarea
-              className="form-control form-control-sm"
-              name="detail"
-              onChange={(e) => updateFormData(e)}
-              rows={4}
-              value={formData.detail}
-            ></textarea>
-          </div>
-
-          <div className="modal-footer">
-            <button
+    <>
+      <S.Container>
+        <S.Modal>
+          <S.Header>Tambah catatan</S.Header>
+          <S.Body>
+            <S.Form>
+              <S.Label>Judul</S.Label>
+              <S.Input
+                type="text"
+                value={formData.titla}
+                name="title"
+                autoComplete="off"
+                onChange={(e) => updateFormData(e)}
+              />
+            </S.Form>
+            <S.Form>
+              <S.Label>Judul</S.Label>
+              <S.TextArea
+                name="detail"
+                onChange={(e) => updateFormData(e)}
+                rows={4}
+                value={formData.detail}
+              />
+            </S.Form>
+          </S.Body>
+          <S.Footer>
+            <S.Button
               type="button"
-              className="btn btn-secondary"
               onClick={() => setIsShowModal(false)}
+              color={"#f44336"}
             >
               Tutup
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={onSubmit}
-            >
+            </S.Button>
+            <S.Button type="button" onClick={onSubmit} color={"#4caf50"}>
               Simpan
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </S.Button>
+          </S.Footer>
+        </S.Modal>
+      </S.Container>
+    </>
   );
 };
 
