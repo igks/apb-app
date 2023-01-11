@@ -10,7 +10,7 @@ import {
   AddFileIcon,
   GoBackIcon,
   SettingIcon,
-} from "components/Icons";
+} from "components/shared/Icons";
 import { Colors } from "constants";
 import { updateConfig } from "services/anggaran";
 import * as S from "./styled.component";

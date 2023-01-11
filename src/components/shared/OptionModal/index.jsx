@@ -1,7 +1,12 @@
 import React from "react";
 import * as S from "./styled.component";
 import { Colors } from "constants";
-import { CloseIcon, DeleteIcon, EditIcon, ListIcon } from "../../Icons";
+import {
+  CloseIcon,
+  DeleteIcon,
+  EditIcon,
+  ListIcon,
+} from "components/shared/Icons";
 
 const OptionModal = ({
   onClickCloseButton,
@@ -10,7 +15,7 @@ const OptionModal = ({
   onClickDelete,
 }) => {
   return (
-    <S.Container>
+    <S.Container onClick={onClickCloseButton}>
       <S.Modal>
         <S.Header>
           <S.Title>Pilih Menu</S.Title>

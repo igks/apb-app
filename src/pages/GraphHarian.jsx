@@ -21,7 +21,7 @@ import {
   GoBackIcon,
   RemainIcon,
   WalletIcon,
-} from "../components/Icons";
+} from "components/shared/Icons";
 import { Colors } from "../constants";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
