@@ -22,7 +22,7 @@ const initialState = {
   },
 };
 
-export default (state = initialState, { type, payload }) => {
+const anggaran = (state = initialState, { type, payload }) => {
   switch (type) {
     case GET_ANGGARAN:
       return {
@@ -58,3 +58,5 @@ export default (state = initialState, { type, payload }) => {
       return state;
   }
 };
+
+export default anggaran;

@@ -14,6 +14,8 @@ import {
 import { Colors } from "../constants";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
+import * as S from "./styled.component";
+import LoadingFallback from "../components/shared/LoadingFallback/index";
 
 const Detail = () => {
   const { state } = useLocation();
@@ -133,84 +135,83 @@ const Detail = () => {
   }, [record]);
 
   return (
-    <div className="container">
+    <S.Container>
       {record == null ? (
-        <div>Loading...</div>
+        <LoadingFallback />
       ) : (
         <>
-          <div className="d-flex flex-row justify-content-between mb-3">
-            <GoBackIcon
-              size="lg"
-              color={Colors.grey}
-              onClick={() => navigate("/anggaran", { state: state.month })}
-            />
-            <h6 className="p-0 m-0">{record.item}</h6>
-            <AddFileIcon
-              size="lg"
-              color={Colors.green}
-              onClick={() => {
-                setIsShowModal(true);
-              }}
-            />
-          </div>
-
-          <div className="row mb-3">
-            <div className="col px-2">
-              <div className="col alert alert-success p-1 mb-0" role="alert">
-                <WalletIcon size="1x" />{" "}
-                <span> {currencyFormat(record.value)}</span>
+          <S.Header>
+            <S.Row mb={"10px"}>
+              <GoBackIcon
+                size="xl"
+                color={Colors.grey}
+                onClick={() => navigate("/anggaran", { state: state.month })}
+              />
+              <S.Title>{record.item}</S.Title>
+              <AddFileIcon
+                size="xl"
+                color={Colors.green}
+                onClick={() => setIsShowModal(true)}
+              />
+            </S.Row>
+            <div className="row mb-3">
+              <div className="col px-2">
+                <div className="col alert alert-success p-1 mb-0" role="alert">
+                  <WalletIcon size="1x" />{" "}
+                  <span> {currencyFormat(record.value)}</span>
+                </div>
+              </div>
+              <div className="col px-2">
+                <div className="col alert alert-danger p-1 mb-0" role="alert">
+                  <RemainIcon size="1x" />
+                  <span> {currencyFormat(record.value - used)}</span>
+                </div>
               </div>
             </div>
-            <div className="col px-2">
-              <div className="col alert alert-danger p-1 mb-0" role="alert">
-                <RemainIcon size="1x" />
-                <span> {currencyFormat(record.value - used)}</span>
-              </div>
-            </div>
-          </div>
-
-          {keyReference.length > 0 &&
-            keyReference.map((key) => (
-              <div key={key} className="mb-2">
-                <small>Tanggal : {key}</small>
-                <hr className="m-0 mb-2" />
-                {compiledDetails[key].map((detail, index) => (
-                  <div
-                    key={`detail_${index}`}
-                    className="alert alert-warning p-1 mb-2 d-flex flex-row justify-content-between align-items-center px-2"
-                  >
-                    <div className="d-flex flex-column justify-content-between">
-                      <div>
-                        <small className="p-0 m-0">{detail.item}</small>
+            <S.Divider />
+          </S.Header>
+          <S.Body>
+            {keyReference.length > 0 &&
+              keyReference.map((key) => (
+                <div key={key} className="mb-2">
+                  <small>Tanggal : {key}</small>
+                  <hr className="m-0 mb-2" />
+                  {compiledDetails[key].map((detail, index) => (
+                    <div
+                      key={`detail_${index}`}
+                      className="alert alert-warning p-1 mb-2 d-flex flex-row justify-content-between align-items-center px-2"
+                    >
+                      <div className="d-flex flex-column justify-content-between">
+                        <div>
+                          <small className="p-0 m-0">{detail.item}</small>
+                        </div>
+                        <div>
+                          <small className="m-0 p-0">
+                            {currencyFormat(detail.value)}
+                          </small>
+                        </div>
                       </div>
-                      <div>
-                        <small className="m-0 p-0">
-                          {currencyFormat(detail.value)}
-                        </small>
-                      </div>
+                      <DeleteIcon
+                        color={Colors.red}
+                        size="lg"
+                        onClick={() => onDeleteDetail(detail.id)}
+                      />
                     </div>
-                    <DeleteIcon
-                      color={Colors.red}
-                      size="lg"
-                      onClick={() => onDeleteDetail(detail.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
+                  ))}
+                </div>
+              ))}
+            {isShowModal && (
+              <FormModal
+                formData={formData}
+                updateFormData={updateFormData}
+                setIsShowModal={setIsShowModal}
+                onSubmit={onSubmit}
+              />
+            )}
+          </S.Body>
         </>
       )}
-
-      {isShowModal && (
-        <FormModal
-          formData={formData}
-          updateFormData={updateFormData}
-          setIsShowModal={setIsShowModal}
-          onSubmit={onSubmit}
-        />
-      )}
-    </div>
+    </S.Container>
   );
 };
-
 export default Detail;
