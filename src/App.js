@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Provider } from "react-redux";
 
-import FormLogin from "pages/FormLogin";
+import FormLogin from "components/forms/FormLogin";
 
 import "App.css";
 
@@ -26,6 +26,7 @@ function App() {
   };
 
   const onLogin = async () => {
+    console.log(formLogin);
     const { isError, error, isAuthenticated } = await login(
       formLogin.email,
       formLogin.password
@@ -38,20 +39,24 @@ function App() {
 
   const header = (
     <div className="text-center my-2">
-      <h6>Anggaran Pengeluaran Bulanan</h6>
-      <hr />
+      <h6 style={{ fontWeight: "bold" }}>Anggaran Pengeluaran Bulanan</h6>
+      <hr style={{ margin: 0, padding: 0 }} />
     </div>
+  );
+
+  const Login = (
+    <FormLogin
+      formLogin={formLogin}
+      updateFormLogin={updateFormLogin}
+      onLogin={onLogin}
+    />
   );
 
   return (
     <>
       <Provider store={store}>
         {!isAuthenticated ? (
-          <FormLogin
-            formLogin={formLogin}
-            updateFormLogin={updateFormLogin}
-            onLogin={onLogin}
-          />
+          <Container content={Login} />
         ) : (
           <Container header={header} content={appRoutes} />
         )}
