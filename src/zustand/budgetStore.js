@@ -3,6 +3,7 @@ import { create } from "zustand";
 const initialBudget = {
   data: null,
   details: [],
+  expense: [],
 };
 
 export const useBudgetStore = create((set) => ({
@@ -15,6 +16,13 @@ export const useBudgetStore = create((set) => ({
       },
     });
   },
+  receiveExpense: (expense) =>
+    set((state) => ({
+      budget: {
+        ...state.budget,
+        expense,
+      },
+    })),
   resetBudget: () =>
     set({
       budget: initialBudget,

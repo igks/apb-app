@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
 
 import AnggaranHeader from "components/anggaran/AnggaranHeader";
 import AnggaranList from "components/anggaran/AnggaranList";
@@ -17,24 +15,15 @@ import * as S from "./styled.component";
 
 const Anggaran = () => {
   const { month, year } = usePeriodStore((state) => state.period);
-  const resetPeriod = usePeriodStore((state) => state.resetPeriod);
   const budget = useBudgetStore((state) => state.budget);
   const ui = useUiStore((state) => state.ui);
-  console.log("🚀 ~ Anggaran ~ budget:", budget);
 
   const noPeriod = month === "_" || year === "_";
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { state } = useLocation();
+  // const navigate = useNavigate();
 
   const [isShowModalDetail, setIsShowModalDetail] = useState(false);
   const [isShowFormBudget, setIsShowFormBudget] = useState(false);
-  const [isShowOptionModal, setIsShowOptionModal] = useState({
-    record: null,
-    status: false,
-  });
-  const [records, setRecord] = useState([]);
 
   // const [formData, setFormData] = useState({
   //   id: null,
@@ -210,18 +199,6 @@ const Anggaran = () => {
     // eslint-disable-next-line
   }, [noPeriod]);
 
-  useEffect(() => {
-    // updateHeader();
-    // eslint-disable-next-line
-  }, [records]);
-
-  // useEffect(() => {
-  //   if (state != null || state != undefined) {
-  //     setBulan(state);
-  //   }
-  //   // eslint-disable-next-line
-  // }, [state]);
-
   if (noPeriod) return <SelectPeriod />;
 
   if (ui.isLoading)
@@ -243,15 +220,6 @@ const Anggaran = () => {
       </S.Header>
       <S.Body>
         <AnggaranList records={budget.details} handleOptionModal={() => {}} />
-
-        {/* {isShowOptionModal.status && (
-          <OptionModal
-            onClickCloseButton={() => handleOptionModal(null, false)}
-            onClickList={() => goToDetail(isShowOptionModal.record)}
-            onClickEdit={() => onUpdate(isShowOptionModal.record)}
-            onClickDelete={() => onDelete(isShowOptionModal.record.id)}
-          />
-        )} */}
       </S.Body>
 
       {isShowFormBudget && (
@@ -267,6 +235,15 @@ const Anggaran = () => {
           handleClose={() => setIsShowModalDetail(false)}
         />
       )}
+
+      {/* {isShowOptionModal.status && (
+        <OptionModal
+          onClickCloseButton={() => handleOptionModal(null, false)}
+          onClickList={() => goToDetail(isShowOptionModal.record)}
+          onClickEdit={() => onUpdate(isShowOptionModal.record)}
+          onClickDelete={() => onDelete(isShowOptionModal.record.id)}
+        />
+      )} */}
     </S.Container>
   );
 };

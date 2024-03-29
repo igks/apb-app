@@ -1,3 +1,4 @@
+import FormModalExpense from "components/forms/FormModalExpense";
 import {
   AddFileIcon,
   DeleteIcon,
@@ -5,105 +6,29 @@ import {
   RemainIcon,
   WalletIcon,
 } from "components/shared/Icons";
-import { doc, setDoc } from "firebase/firestore";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-import FormModal from "../components/forms/FormModalDetail";
+import { deleteExpense } from "services/expense";
 import LoadingFallback from "../components/shared/LoadingFallback/index";
 import { Colors } from "../constants";
 import { currencyFormat } from "../helpers/currency-format";
-import { db } from "../services/firebase";
+import { useBudgetStore } from "./../zustand/budgetStore";
 import * as S from "./styled.component";
 
 const Detail = () => {
   const { state } = useLocation();
+  const { expense } = useBudgetStore((state) => state.budget);
   const navigate = useNavigate();
   const [record, setRecord] = useState(null);
   const [compiledDetails, setCompiledDetails] = useState([]);
   const [keyReference, setSetKeyReference] = useState([]);
   const [used, setUsed] = useState(0);
   const [isShowModal, setIsShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    item: "",
-    value: 0,
-  });
-
-  const updateFormData = (e) => {
-    let targetName = e.target.name;
-    if (targetName === "item") {
-      setFormData({
-        ...formData,
-        [targetName]: e.target.value,
-      });
-    }
-    if (targetName === "value") {
-      let parsed = parseInt(e.target.value);
-      if (isNaN(parsed)) {
-        setFormData({
-          ...formData,
-          [targetName]: 0,
-        });
-      } else {
-        setFormData({
-          ...formData,
-          [targetName]: parsed,
-        });
-      }
-    }
-  };
-
-  const onSubmit = async () => {
-    if (formData.item === "" || formData.value < 0) {
-      setIsShowModal(false);
-      alert("Data tidak valid!");
-      return;
-    }
-
-    let newRecord;
-    let date = new Date().getDate();
-    let id = uuidv4();
-    if (record?.details?.length > 0 ?? false) {
-      newRecord = {
-        ...record,
-        details: [
-          ...record.details,
-          { id, item: formData.item, value: formData.value, tanggal: date },
-        ],
-      };
-    } else {
-      const detail = [
-        { id, item: formData.item, value: formData.value, tanggal: date },
-      ];
-      newRecord = { ...record, details: detail };
-    }
-
-    try {
-      await setDoc(doc(db, "records", `${record.id}`), newRecord);
-    } catch (err) {
-      alert(err);
-    }
-
-    setRecord(newRecord);
-    setFormData({
-      ...formData,
-      item: "",
-      value: 0,
-    });
-    setIsShowModal(false);
-  };
 
   const onDeleteDetail = async (id) => {
     if (window.confirm("Yakin ingin dihapus?")) {
-      const newDetails = record.details.filter((detail) => detail.id != id);
-      const newRecord = { ...record, details: newDetails };
-      try {
-        await setDoc(doc(db, "records", `${record.id}`), newRecord);
-      } catch (err) {
-        alert(err);
-      }
-      setRecord(newRecord);
+      await deleteExpense(id, state.data.id);
     }
   };
 
@@ -114,25 +39,25 @@ const Detail = () => {
   }, [state]);
 
   useEffect(() => {
-    if (record?.details?.length > 0 ?? false) {
+    if (expense?.length > 0 ?? false) {
       let newUsedValue = 0;
-      record.details.forEach((item) => {
-        newUsedValue += item.value;
+      expense.forEach((item) => {
+        newUsedValue += parseInt(item.value);
       });
       setUsed(newUsedValue);
     } else {
       setUsed(0);
     }
 
-    if (record != null) {
-      const objectDetails = _.groupBy(record.details, (detail) => {
-        return detail.tanggal;
+    if (expense != null) {
+      const objectDetails = _.groupBy(expense, (ex) => {
+        return ex.date;
       });
       const sortedDetails = Object.keys(objectDetails).sort((a, b) => b - a);
       setCompiledDetails(objectDetails);
       setSetKeyReference(sortedDetails);
     }
-  }, [record]);
+  }, [expense]);
 
   return (
     <S.Container>
@@ -145,9 +70,9 @@ const Detail = () => {
               <GoBackIcon
                 size="xl"
                 color={Colors.grey}
-                onClick={() => navigate("/anggaran", { state: state.month })}
+                onClick={() => navigate("/anggaran")}
               />
-              <S.Title>{record.item}</S.Title>
+              <S.Title>{record.name}</S.Title>
               <AddFileIcon
                 size="xl"
                 color={Colors.green}
@@ -158,7 +83,7 @@ const Detail = () => {
               <div className="col px-2">
                 <div className="col alert alert-success p-1 mb-0" role="alert">
                   <WalletIcon size="1x" />{" "}
-                  <span> {currencyFormat(record.value)}</span>
+                  <span> {currencyFormat(parseInt(record.value))}</span>
                 </div>
               </div>
               <div className="col px-2">
@@ -183,11 +108,11 @@ const Detail = () => {
                     >
                       <div className="d-flex flex-column justify-content-between">
                         <div>
-                          <small className="p-0 m-0">{detail.item}</small>
+                          <small className="p-0 m-0">{detail.name}</small>
                         </div>
                         <div>
                           <small className="m-0 p-0">
-                            {currencyFormat(detail.value)}
+                            {currencyFormat(parseInt(detail.value))}
                           </small>
                         </div>
                       </div>
@@ -201,11 +126,9 @@ const Detail = () => {
                 </div>
               ))}
             {isShowModal && (
-              <FormModal
-                formData={formData}
-                updateFormData={updateFormData}
-                setIsShowModal={setIsShowModal}
-                onSubmit={onSubmit}
+              <FormModalExpense
+                record={state.data}
+                handleClose={() => setIsShowModal(false)}
               />
             )}
           </S.Body>

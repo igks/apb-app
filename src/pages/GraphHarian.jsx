@@ -9,11 +9,10 @@ import {
   Tooltip,
 } from "chart.js";
 import SelectMonth from "components/anggaran/SelectMonth";
-import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loadAnggaranList } from "services/budget";
+// import { loadAnggaranList } from "services/budget";
 
 ChartJS.register(
   CategoryScale,
@@ -68,27 +67,27 @@ const GraphHarian = () => {
   };
 
   const loadData = async () => {
-    const rawRecord = await loadAnggaranList(bulan);
-    const details = [];
-    rawRecord.forEach((record) => {
-      details.push(...record.details);
-    });
-    const objectDetails = _.groupBy(details, (detail) => {
-      return detail.tanggal;
-    });
-    const label = [];
-    const data = [];
-    Object.keys(objectDetails).forEach((key) => {
-      label.push(key);
-      let sum = objectDetails[key].reduce(
-        (acc, detail) => acc + detail.value,
-        0
-      );
-      data.push(sum);
-    });
-    setXLabels(label);
-    setDataSeries(data);
-    setIsLoading(false);
+    // const rawRecord = await loadAnggaranList(bulan);
+    // const details = [];
+    // rawRecord.forEach((record) => {
+    //   details.push(...record.details);
+    // });
+    // const objectDetails = _.groupBy(details, (detail) => {
+    //   return detail.tanggal;
+    // });
+    // const label = [];
+    // const data = [];
+    // Object.keys(objectDetails).forEach((key) => {
+    //   label.push(key);
+    //   let sum = objectDetails[key].reduce(
+    //     (acc, detail) => acc + detail.value,
+    //     0
+    //   );
+    //   data.push(sum);
+    // });
+    // setXLabels(label);
+    // setDataSeries(data);
+    // setIsLoading(false);
   };
 
   useEffect(() => {

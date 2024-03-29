@@ -1,9 +1,9 @@
 import { GoBackIcon, RemainIcon } from "components/shared/Icons";
-import { Colors, optionBulan } from "constants";
+import { Colors } from "constants";
 import { currencyFormat } from "helpers/currency-format";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loadAnggaranList } from "services/budget";
+// import { loadAnggaranList } from "services/budget";
 
 const PerTanggal = () => {
   const navigate = useNavigate();
@@ -13,26 +13,25 @@ const PerTanggal = () => {
   const [total, setTotal] = useState(0);
 
   const loadDetail = async () => {
-    const d = new Date(tanggal);
-    const month = d.getMonth();
-    const date = d.getDate();
-    const monthString = optionBulan[month + 1].toLowerCase();
-
-    const data = await loadAnggaranList(monthString);
-    const records = [];
-    let sumValue = 0;
-    if (data.length > 0) {
-      data.forEach((anggaran) => {
-        anggaran.details.forEach((detail) => {
-          if (detail.tanggal == date) {
-            records.push(detail);
-            sumValue += detail.value;
-          }
-        });
-      });
-    }
-    setDetails(records);
-    setTotal(sumValue);
+    // const d = new Date(tanggal);
+    // const month = d.getMonth();
+    // const date = d.getDate();
+    // const monthString = optionBulan[month + 1].toLowerCase();
+    // const data = await loadAnggaranList(monthString);
+    // const records = [];
+    // let sumValue = 0;
+    // if (data.length > 0) {
+    //   data.forEach((anggaran) => {
+    //     anggaran.details.forEach((detail) => {
+    //       if (detail.tanggal == date) {
+    //         records.push(detail);
+    //         sumValue += detail.value;
+    //       }
+    //     });
+    //   });
+    // }
+    // setDetails(records);
+    // setTotal(sumValue);
   };
 
   useEffect(() => {

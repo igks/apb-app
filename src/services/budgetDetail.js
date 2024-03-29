@@ -1,6 +1,8 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   getDocs,
   orderBy,
   query,
@@ -36,5 +38,12 @@ export const addBudgetDetail = async (detail) => {
   uiState.uiLoading();
   await addDoc(detailRef, detail);
   await getBudget(detail.month, detail.year);
+  uiState.resetUi();
+};
+
+export const deleteDetail = async (record) => {
+  uiState.uiLoading();
+  await deleteDoc(doc(db, "budget-detail", record.id));
+  await getBudget(record.month, record.year);
   uiState.resetUi();
 };
