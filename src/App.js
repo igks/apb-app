@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 
 import FormLogin from "components/forms/FormLogin";
 
 import "App.css";
 
-import { login } from "services/auth";
-import store from "redux/store";
 import Container from "container";
+import store from "redux/store";
 import { appRoutes } from "routes";
+import { getUser, login } from "services/auth";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,7 +26,6 @@ function App() {
   };
 
   const onLogin = async () => {
-    console.log(formLogin);
     const { isError, error, isAuthenticated } = await login(
       formLogin.email,
       formLogin.password
@@ -36,6 +35,17 @@ function App() {
     if (!isError && !isAuthenticated) alert("Email atau password salah!");
     if (isError) alert(error);
   };
+
+  const checkUser = () => {
+    const user = getUser();
+    if (user?.email != null) {
+      setIsAuthenticated(true);
+    }
+  };
+
+  useEffect(() => {
+    checkUser();
+  }, []);
 
   const header = (
     <div className="text-center my-2">
