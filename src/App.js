@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Provider } from "react-redux";
 
 import FormLogin from "components/forms/FormLogin";
@@ -8,7 +8,7 @@ import "App.css";
 import Container from "container";
 import store from "redux/store";
 import { appRoutes } from "routes";
-import { getUser, login } from "services/auth";
+import { firebaseAuth, login } from "services/auth";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,16 +36,11 @@ function App() {
     if (isError) alert(error);
   };
 
-  const checkUser = () => {
-    const user = getUser();
-    if (user?.email != null) {
+  firebaseAuth.onAuthStateChanged((user) => {
+    if (user) {
       setIsAuthenticated(true);
     }
-  };
-
-  useEffect(() => {
-    checkUser();
-  }, []);
+  });
 
   const header = (
     <div className="text-center my-2">

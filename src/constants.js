@@ -6,7 +6,6 @@ export const Colors = {
 };
 
 export const optionBulan = [
-  "Pilih bulan",
   "Januari",
   "Pebruari",
   "Maret",
@@ -25,3 +24,5 @@ export const optionTanggal = [
   "Pilih tanggal",
   ...new Array(31).fill(1).map((_, i) => i + 1),
 ];
+
+export const optionYear = [...new Array(51).fill(1).map((_, i) => i + 2020)];

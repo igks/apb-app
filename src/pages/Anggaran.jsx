@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
 import FormModal from "components/forms/FormModal";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import AnggaranHeader from "components/anggaran/AnggaranHeader";
-import OptionModal from "components/shared/OptionModal";
-import SelectMonth from "components/anggaran/SelectMonth";
-import {
-  addAnggaran,
-  calculateTotal,
-  deleteAnggaran,
-  updateConfig,
-} from "services/anggaran";
 import AnggaranList from "components/anggaran/AnggaranList";
+import FormConfig from "components/forms/FormConfig";
+import LoadingFallback from "components/shared/LoadingFallback";
+import OptionModal from "components/shared/OptionModal";
 import {
   GET_ANGGARAN_HEADER_REQUESTED,
   GET_ANGGARAN_REQUESTED,
 } from "redux/actions/anggaran-action";
-import FormConfig from "components/forms/FormConfig";
+import { addAnggaran, deleteAnggaran, updateConfig } from "services/anggaran";
+import { usePeriodStore } from "../zustand/periodStore";
+import Periode from "./Periode";
 import * as S from "./styled.component";
-import LoadingFallback from "components/shared/LoadingFallback";
 
 const Anggaran = () => {
+  const { month, year } = usePeriodStore((state) => state.period);
+  const resetPeriod = usePeriodStore((state) => state.resetPeriod);
+
+  const noPeriod = month === "_" || year === "_";
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { state } = useLocation();
@@ -237,8 +238,8 @@ const Anggaran = () => {
   }, [state]);
   return (
     <>
-      {bulan === "Pilih bulan" ? (
-        <SelectMonth onSetMonth={setBulan} />
+      {noPeriod ? (
+        <Periode />
       ) : (
         <S.Container>
           {list.isFetching ? (
@@ -247,9 +248,12 @@ const Anggaran = () => {
             <>
               <S.Header>
                 <AnggaranHeader
-                  onBack={() => navigate("/")}
+                  onBack={() => {
+                    resetPeriod();
+                    navigate("/");
+                  }}
                   onAdd={onAddData}
-                  bulan={bulan}
+                  bulan={`${month} - ${year}`}
                   setIsShowFormConfig={setIsShowFormConfig}
                 />
               </S.Header>

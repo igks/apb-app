@@ -1,21 +1,24 @@
 import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate,
 } from "react-router-dom";
 
-import Menu from "./pages/Menu";
+import Periode from "pages/Periode";
 import Anggaran from "./pages/Anggaran";
-import Detail from "./pages/Detail";
 import Catatan from "./pages/Catatan";
-import PerTanggal from "./pages/PerTanggal";
+import Detail from "./pages/Detail";
 import GraphHarian from "./pages/GraphHarian";
+import Menu from "./pages/Menu";
+import PerTanggal from "./pages/PerTanggal";
 
 export const appRoutes = (
   <Router>
     <Routes>
       <Route exact path="/" element={<Menu />}></Route>
+
+      <Route path="/periode" element={<Periode />}></Route>
       <Route path="/anggaran" element={<Anggaran />}></Route>
       <Route path="/detail" element={<Detail />}></Route>
       <Route path="/catatan" element={<Catatan />}></Route>
