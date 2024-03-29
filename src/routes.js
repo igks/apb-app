@@ -5,7 +5,6 @@ import {
   Routes,
 } from "react-router-dom";
 
-import Periode from "pages/Periode";
 import Anggaran from "./pages/Anggaran";
 import Catatan from "./pages/Catatan";
 import Detail from "./pages/Detail";
@@ -18,7 +17,6 @@ export const appRoutes = (
     <Routes>
       <Route exact path="/" element={<Menu />}></Route>
 
-      <Route path="/periode" element={<Periode />}></Route>
       <Route path="/anggaran" element={<Anggaran />}></Route>
       <Route path="/detail" element={<Detail />}></Route>
       <Route path="/catatan" element={<Catatan />}></Route>

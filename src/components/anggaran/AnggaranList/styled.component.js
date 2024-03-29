@@ -11,9 +11,9 @@ export const Card = styled.div`
   padding: 10px;
   border-radius: 5px;
   background-color: #c8e6c9;
-  -webkit-box-shadow: 18px 11px 6px -4px rgba(129, 199, 132, 1);
-  -moz-box-shadow: 18px 11px 6px -4px rgba(129, 199, 132, 1);
-  box-shadow: 18px 11px 6px -4px rgba(129, 199, 132, 1);
+  -webkit-box-shadow: 18px 11px 6px -4px rgba(129, 199, 132, 0.7);
+  -moz-box-shadow: 18px 11px 6px -4px rgba(129, 199, 132, 0.7);
+  box-shadow: 18px 11px 6px -4px rgba(129, 199, 132, 0.7);
 `;
 
 export const RowHeader = styled.div`

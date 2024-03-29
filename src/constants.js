@@ -3,6 +3,7 @@ export const Colors = {
   grey: "#8a8a8a",
   red: "red",
   yellow: "#fac811",
+  orange: "#fc8c03",
 };
 
 export const optionBulan = [

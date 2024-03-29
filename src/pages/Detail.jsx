@@ -1,9 +1,3 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import FormModal from "../components/forms/FormModal";
-import { currencyFormat } from "../helpers/currency-format";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../services/firebase";
 import {
   AddFileIcon,
   DeleteIcon,
@@ -11,11 +5,17 @@ import {
   RemainIcon,
   WalletIcon,
 } from "components/shared/Icons";
-import { Colors } from "../constants";
+import { doc, setDoc } from "firebase/firestore";
 import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import * as S from "./styled.component";
+import FormModal from "../components/forms/FormModalDetail";
 import LoadingFallback from "../components/shared/LoadingFallback/index";
+import { Colors } from "../constants";
+import { currencyFormat } from "../helpers/currency-format";
+import { db } from "../services/firebase";
+import * as S from "./styled.component";
 
 const Detail = () => {
   const { state } = useLocation();

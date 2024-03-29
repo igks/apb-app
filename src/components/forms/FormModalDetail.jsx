@@ -1,9 +1,36 @@
-import React from "react";
+import { useState } from "react";
+import { addBudgetDetail } from "services/budgetDetail";
 import * as S from "./styled.component";
 
-const FormModal = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
+const FormModalDetail = ({ budget, handleClose }) => {
+  const { id, month, year } = budget?.data;
+  const [formData, setFormData] = useState({
+    name: "",
+    value: 0,
+  });
+
+  const updateFormData = (e) => {
+    setFormData((state) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const onSubmit = async () => {
+    const detail = {
+      budgetId: id,
+      month,
+      year,
+      name: formData.name,
+      value: formData.value,
+      balance: formData.value,
+    };
+    await addBudgetDetail(detail);
+    handleClose();
+  };
+
   return (
-    <S.Container onClick={() => setIsShowModal(false)}>
+    <S.Container>
       <S.Modal>
         <S.Header> {formData.id == null ? "Tambah" : "Edit"} Item</S.Header>
         <S.Body>
@@ -12,7 +39,7 @@ const FormModal = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
             <S.Input
               type="text"
               value={formData.item}
-              name="item"
+              name="name"
               autoComplete="off"
               onChange={(e) => updateFormData(e)}
             />
@@ -29,11 +56,7 @@ const FormModal = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
           </S.Form>
         </S.Body>
         <S.Footer>
-          <S.Button
-            type="button"
-            onClick={() => setIsShowModal(false)}
-            color={"#f44336"}
-          >
+          <S.Button type="button" onClick={handleClose} color={"#f44336"}>
             Tutup
           </S.Button>
           <S.Button type="button" onClick={onSubmit} color={"#4caf50"}>
@@ -45,4 +68,4 @@ const FormModal = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
   );
 };
 
-export default FormModal;
+export default FormModalDetail;

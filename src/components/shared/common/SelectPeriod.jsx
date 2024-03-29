@@ -5,9 +5,9 @@ import { Center, Space } from "components/shared/common";
 import { Colors } from "constants";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePeriodStore } from "./../zustand/periodStore";
+import { usePeriodStore } from "../../../zustand/periodStore";
 
-const Periode = () => {
+const SelectPeriod = () => {
   const navigate = useNavigate();
   const [month, setMonth] = useState("_");
   const [year, setYear] = useState("_");
@@ -28,14 +28,14 @@ const Periode = () => {
       <Space h="20px" />
       <Center>
         <Button type="button" onClick={() => navigate("/")} color={Colors.grey}>
-          Kembali
+          Back
         </Button>
         <Button type="button" onClick={handlePeriodChange} color={"#4caf50"}>
-          Cari
+          Next
         </Button>
       </Center>
     </>
   );
 };
 
-export default Periode;
+export default SelectPeriod;
