@@ -9,6 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { getPreviousPeriod } from "helpers/period";
 import { db } from "../services/firebase";
 import { useUiStore } from "../store/uiStore";
 import { getBudget } from "./budget";
@@ -41,6 +42,33 @@ export const addBudgetDetail = async (detail) => {
   await addDoc(detailRef, detail);
   await getBudget(detail.month, detail.year);
   uiState.resetUi();
+};
+
+export const copyBudgetDetail = async (currentMonth, currentYear, budgetId) => {
+  uiState.uiLoading();
+  const { month, year } = getPreviousPeriod(currentMonth, currentYear);
+
+  const q = query(
+    detailRef,
+    where("month", "==", `${month}`),
+    where("year", "==", `${year}`)
+  );
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    snapshot.forEach(async (s) => {
+      const detail = {
+        ...s.data(),
+        budgetId,
+        month: currentMonth,
+        year: currentYear,
+        expense: 0,
+      };
+      await addDoc(detailRef, detail);
+    });
+    uiState.resetUi();
+  } else {
+    uiState.resetUi();
+  }
 };
 
 export const updateBudgetDetail = async (id, detail) => {

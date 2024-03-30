@@ -11,7 +11,7 @@ import {
 import { getPreviousPeriod } from "helpers/period";
 import { useBudgetStore } from "../store/budgetStore";
 import { useUiStore } from "../store/uiStore";
-import { getBudgetDetails } from "./budgetDetail";
+import { copyBudgetDetail, getBudgetDetails } from "./budgetDetail";
 import { db } from "./firebase";
 
 const uiState = useUiStore.getState();
@@ -56,8 +56,9 @@ export const copyBudget = async (currentMonth, currentYear) => {
       year: currentYear,
     };
 
-    await addDoc(budgetRef, budget);
-    useBudgetStore.getState().receiveBudget(budget);
+    const newBudget = await addDoc(budgetRef, budget);
+    await copyBudgetDetail(currentMonth, currentYear, newBudget.id);
+    await getBudget(currentMonth, currentYear);
     uiState.resetUi();
   } else {
     useBudgetStore.getState().resetBudget();
@@ -73,7 +74,7 @@ export const addBudget = async (budget) => {
     id: newBudget.id,
     ...newBudget.data(),
   };
-  useBudgetStore.getState().receiveBudget(budgetState);
+  useBudgetStore.getState().receiveBudget({ budget: budgetState });
   uiState.resetUi();
 };
 

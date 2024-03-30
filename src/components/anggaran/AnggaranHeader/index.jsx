@@ -19,8 +19,8 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
   const resetPeriod = usePeriodStore((state) => state.resetPeriod);
   const { data: budget, details } = useBudgetStore((state) => state.budget);
 
-  const balance = getBudgetBalance(budget.limit, details);
-  const unAllocated = getUnAllocatedBudget(balance, budget.deposit);
+  const balance = getBudgetBalance(budget?.limit, details);
+  const unAllocated = getUnAllocatedBudget(balance, budget?.deposit);
 
   const handleGoBack = () => {
     resetPeriod();
@@ -32,11 +32,11 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
       <S.Row mb="5px">
         <S.Card color="#c8e6c9" onClick={onCreateBudget}>
           <IncomeIcon size="1x" />{" "}
-          <span> {currencyFormat(parseInt(budget.limit))}</span>
+          <span> {currencyFormat(parseInt(budget?.limit))}</span>
         </S.Card>
         <S.Card color="#bbdefb" onClick={onCreateBudget}>
           <CarryForwardIcon size="1x" />
-          <span> {currencyFormat(parseInt(budget.deposit))}</span>
+          <span> {currencyFormat(parseInt(budget?.deposit))}</span>
         </S.Card>
       </S.Row>
       <S.Row>
@@ -52,7 +52,7 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
       <S.Divider />
       <S.Row>
         <GoBackIcon size="xl" color={Colors.grey} onClick={handleGoBack} />
-        <S.Title>{`${budget.month.toUpperCase()} - ${budget.year}`}</S.Title>
+        <S.Title>{`${budget?.month?.toUpperCase()} - ${budget?.year}`}</S.Title>
         <AddFileIcon size="xl" color={Colors.green} onClick={onAddDetail} />
       </S.Row>
       <S.Divider />
