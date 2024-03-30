@@ -92,3 +92,24 @@ export const getDailyExpense = async (day, month, year) => {
   uiState.resetUi();
   return expense;
 };
+
+export const getMonthlyExpense = async (month, year) => {
+  uiState.uiLoading();
+  const q = query(
+    expenseRef,
+    where("month", "==", `${month}`),
+    where("year", "==", `${year}`)
+  );
+  const snapshot = await getDocs(q);
+  const expense = [];
+  if (!snapshot.empty) {
+    snapshot.forEach((s) => {
+      expense.push({
+        id: s.id,
+        ...s.data(),
+      });
+    });
+  }
+  uiState.resetUi();
+  return expense;
+};

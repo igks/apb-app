@@ -1,14 +1,13 @@
-import React from "react";
 import { optionBulan } from "constants";
 import * as S from "./styled.component";
 
-const SelectMonth = ({ onSetMonth }) => {
+const SelectMonth = ({ setPeriod }) => {
   const bulanOnChange = (e) => {
     const value = e.target.value;
     const d = new Date(value);
-    const month = d.getMonth();
-    const monthString = optionBulan[month + 1].toLowerCase();
-    onSetMonth(monthString);
+    const month = optionBulan[d.getMonth()];
+    const year = d.getFullYear();
+    setPeriod({ month, year });
   };
 
   return (

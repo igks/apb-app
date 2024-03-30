@@ -9,10 +9,13 @@ import {
   Tooltip,
 } from "chart.js";
 import SelectMonth from "components/anggaran/SelectMonth";
+import { GoBackIcon } from "components/shared/Icons";
+import { Colors } from "constants";
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { useLocation, useNavigate } from "react-router-dom";
-// import { loadAnggaranList } from "services/budget";
+import { useNavigate } from "react-router-dom";
+import { getMonthlyExpense } from "services/expense";
 
 ChartJS.register(
   CategoryScale,
@@ -25,21 +28,18 @@ ChartJS.register(
 );
 
 const GraphHarian = () => {
-  const { state } = useLocation();
   const navigate = useNavigate();
-  const [record, setRecord] = useState(null);
-  const [compiledDetails, setCompiledDetails] = useState([]);
-  const [keyReference, setSetKeyReference] = useState([]);
-  const [used, setUsed] = useState(0);
-  const [isShowModal, setIsShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    item: "",
-    value: 0,
-  });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [xLabels, setXLabels] = useState([]);
   const [dataSeries, setDataSeries] = useState([]);
-  const [bulan, setBulan] = useState("Pilih bulan");
+  const [period, setPeriod] = useState({
+    month: "",
+    year: "",
+  });
+  const title =
+    period.month === ""
+      ? ""
+      : `GRAFIK HARIAN ${period.month.toLocaleUpperCase()} - ${period.year}`;
 
   const options = {
     responsive: true,
@@ -49,7 +49,7 @@ const GraphHarian = () => {
       },
       title: {
         display: true,
-        text: `GRAFIK HARIAN ${bulan.toLocaleUpperCase()}`,
+        text: title,
       },
     },
   };
@@ -67,38 +67,47 @@ const GraphHarian = () => {
   };
 
   const loadData = async () => {
-    // const rawRecord = await loadAnggaranList(bulan);
-    // const details = [];
-    // rawRecord.forEach((record) => {
-    //   details.push(...record.details);
-    // });
-    // const objectDetails = _.groupBy(details, (detail) => {
-    //   return detail.tanggal;
-    // });
-    // const label = [];
-    // const data = [];
-    // Object.keys(objectDetails).forEach((key) => {
-    //   label.push(key);
-    //   let sum = objectDetails[key].reduce(
-    //     (acc, detail) => acc + detail.value,
-    //     0
-    //   );
-    //   data.push(sum);
-    // });
-    // setXLabels(label);
-    // setDataSeries(data);
-    // setIsLoading(false);
+    setIsLoading(true);
+    const expenses = await getMonthlyExpense(period.month, period.year);
+    const details = [];
+    expenses.forEach((e) => {
+      details.push(e);
+    });
+
+    const objectDetails = _.groupBy(details, (detail) => {
+      return detail.date;
+    });
+    const label = [];
+    const data = [];
+    Object.keys(objectDetails).forEach((key) => {
+      label.push(key);
+      let sum = objectDetails[key].reduce(
+        (acc, detail) => acc + parseInt(detail.value),
+        0
+      );
+      data.push(sum);
+    });
+    setXLabels(label);
+    setDataSeries(data);
+    setIsLoading(false);
   };
 
   useEffect(() => {
+    if (period.month === "") return;
     loadData();
-  }, [bulan]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [period]);
 
   return (
     <div className="container">
-      <SelectMonth onSetMonth={setBulan} />
+      <div className="d-flex justify-content-between align-items-center">
+        <div onClick={() => navigate("/")}>
+          <GoBackIcon size="xl" color={Colors.grey} />
+        </div>
+        <SelectMonth setPeriod={setPeriod} />
+      </div>
       <hr className="mb-4" />
-      {bulan != "Pilih bulan" ? (
+      {period.month !== "" ? (
         <>
           {isLoading ? (
             <div>Loading...</div>

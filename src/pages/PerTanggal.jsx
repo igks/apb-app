@@ -31,6 +31,7 @@ const PerTanggal = () => {
 
   useEffect(() => {
     loadDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tanggal]);
 
   return (

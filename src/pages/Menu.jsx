@@ -1,7 +1,4 @@
-import Container from "container";
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { executeUpdate } from "services/mock";
 
 const Menu = () => {
   const navigate = useNavigate();
