@@ -1,9 +1,9 @@
 import { GoBackIcon, RemainIcon } from "components/shared/Icons";
-import { Colors } from "constants";
+import { Colors, optionBulan } from "constants";
 import { currencyFormat } from "helpers/currency-format";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { loadAnggaranList } from "services/budget";
+import { getDailyExpense } from "services/expense";
 
 const PerTanggal = () => {
   const navigate = useNavigate();
@@ -13,25 +13,20 @@ const PerTanggal = () => {
   const [total, setTotal] = useState(0);
 
   const loadDetail = async () => {
-    // const d = new Date(tanggal);
-    // const month = d.getMonth();
-    // const date = d.getDate();
-    // const monthString = optionBulan[month + 1].toLowerCase();
-    // const data = await loadAnggaranList(monthString);
-    // const records = [];
-    // let sumValue = 0;
-    // if (data.length > 0) {
-    //   data.forEach((anggaran) => {
-    //     anggaran.details.forEach((detail) => {
-    //       if (detail.tanggal == date) {
-    //         records.push(detail);
-    //         sumValue += detail.value;
-    //       }
-    //     });
-    //   });
-    // }
-    // setDetails(records);
-    // setTotal(sumValue);
+    const date = new Date(tanggal);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    const expenses = await getDailyExpense(day, optionBulan[month], year);
+    let total = 0;
+    const records = [];
+    expenses.forEach((e) => {
+      total += parseInt(e.value);
+      records.push(e);
+    });
+    setDetails(records);
+    setTotal(total);
   };
 
   useEffect(() => {
@@ -76,11 +71,11 @@ const PerTanggal = () => {
               >
                 <div className="d-flex flex-column justify-content-between">
                   <div>
-                    <small className="p-0 m-0">{detail.item}</small>
+                    <small className="p-0 m-0">{detail.name}</small>
                   </div>
                   <div>
                     <small className="m-0 p-0">
-                      {currencyFormat(detail.value)}
+                      {currencyFormat(parseInt(detail.value))}
                     </small>
                   </div>
                 </div>
