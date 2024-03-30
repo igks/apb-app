@@ -3722,7 +3722,6 @@ export const executeUpdate = async () => {
   org.forEach(async (data) => {
     const updated = updateIdRecord(data);
     await setDoc(doc(db, "records", data.id), updated);
-    console.log(data.id + " updated");
   });
   // org.forEach(async (data) => {
   //   const updated = updateRecord(data);

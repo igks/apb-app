@@ -1,9 +1,8 @@
-import React from "react";
 import * as S from "./styled.component";
 
 const FormNote = ({ formData, updateFormData, setIsShowModal, onSubmit }) => {
   return (
-    <S.Container onClick={() => setIsShowModal(false)}>
+    <S.Container>
       <S.Modal>
         <S.Header>Tambah catatan</S.Header>
         <S.Body>
