@@ -5,7 +5,7 @@ import { Colors } from "constants";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { copyBudget } from "services/budget";
-import { usePeriodStore } from "./../../../zustand/periodStore";
+import { usePeriodStore } from "../../../store/periodStore";
 
 const NoBudget = () => {
   const navigate = useNavigate();

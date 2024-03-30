@@ -6,16 +6,26 @@ import {
   getDocs,
   query,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../services/firebase";
-import { useBudgetStore } from "./../zustand/budgetStore";
-import { useUiStore } from "./../zustand/uiStore";
+import { useBudgetStore } from "../store/budgetStore";
+import { useUiStore } from "../store/uiStore";
+import { updateDetailExpense } from "./budgetDetail";
 
 const expenseRef = collection(db, "expense");
 const uiState = useUiStore.getState();
 const budgetState = useBudgetStore.getState();
 
+export const getTotalExpense = (expenses) => {
+  const total = expenses.reduce((acc, obj) => {
+    return acc + parseInt(obj.value);
+  }, 0);
+  return total;
+};
+
 export const getExpense = async (detailId) => {
+  uiState.uiLoading();
   const q = query(expenseRef, where("detailId", "==", detailId));
   const snapshot = await getDocs(q);
   const expense = [];
@@ -27,6 +37,7 @@ export const getExpense = async (detailId) => {
       });
     });
   }
+  uiState.resetUi();
   return expense;
 };
 
@@ -35,6 +46,8 @@ export const addExpense = async (expense) => {
   await addDoc(expenseRef, expense);
   const expenseList = await getExpense(expense.detailId);
   budgetState.receiveExpense(expenseList);
+  const totalExpense = getTotalExpense(expenseList);
+  await updateDetailExpense(expense.detailId, totalExpense);
   uiState.resetUi();
 };
 
@@ -43,5 +56,17 @@ export const deleteExpense = async (id, detailId) => {
   await deleteDoc(doc(db, "expense", id));
   const expenseList = await getExpense(detailId);
   budgetState.receiveExpense(expenseList);
+  const totalExpense = getTotalExpense(expenseList);
+  await updateDetailExpense(detailId, totalExpense);
   uiState.resetUi();
+};
+
+export const deleteBatchExpense = async (detailId) => {
+  const batch = writeBatch(db);
+  const expenseList = await getExpense(detailId);
+  expenseList.forEach((e) => {
+    const docRef = doc(db, "expense", e.id);
+    batch.delete(docRef);
+  });
+  await batch.commit();
 };

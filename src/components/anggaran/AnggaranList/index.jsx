@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteDetail } from "services/budgetDetail";
 import { getExpense } from "services/expense";
-import { useBudgetStore } from "./../../../zustand/budgetStore";
+import { useBudgetStore } from "../../../store/budgetStore";
+import FormModalDetail from "./../../forms/FormModalDetail";
 import OptionModal from "./../../shared/OptionModal/index";
 import ListCard from "./ListCard";
 import * as S from "./styled.component";
@@ -10,6 +11,7 @@ import * as S from "./styled.component";
 const AnggaranList = ({ records }) => {
   const navigate = useNavigate();
   const [showOption, setShowOption] = useState(false);
+  const [isShowModalDetail, setIsShowModalDetail] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const receiveExpense = useBudgetStore((state) => state.receiveExpense);
 
@@ -43,14 +45,18 @@ const AnggaranList = ({ records }) => {
       </S.List>
       {showOption && (
         <OptionModal
-          // onClickCloseButton={() => handleOptionModal(null, false)}
-          // onClickList={() => goToDetail(isShowOptionModal.record)}
-          // onClickEdit={() => onUpdate(isShowOptionModal.record)}
-          // onClickDelete={() => onDelete(isShowOptionModal.record.id)}
           onClickCloseButton={() => setShowOption(false)}
           onClickList={() => goToDetail(selectedItem)}
-          onClickEdit={() => {}}
+          onClickEdit={() => setIsShowModalDetail(true)}
           onClickDelete={onDeleteDetail}
+        />
+      )}
+
+      {isShowModalDetail && (
+        <FormModalDetail
+          isUpdate={true}
+          budget={{ data: selectedItem }}
+          handleClose={() => setIsShowModalDetail(false)}
         />
       )}
     </>

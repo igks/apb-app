@@ -1,23 +1,9 @@
 import { EllipsisIcon, RemainIcon, WalletIcon } from "components/shared/Icons";
-import { useEffect, useState } from "react";
 import { Colors } from "../../../constants";
 import { currencyFormat } from "../../../helpers/currency-format";
 import * as S from "./styled.component";
 
 const ListCard = ({ record, onEllipsisClicked }) => {
-  const [used, setUsed] = useState(0);
-
-  useEffect(() => {
-    if (record?.details?.length > 0 ?? false) {
-      let newUsedValue = 0;
-      record.details.forEach((item) => {
-        newUsedValue += item.value;
-      });
-      setUsed(newUsedValue);
-    }
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <S.Card>
       <S.RowHeader>
@@ -33,7 +19,8 @@ const ListCard = ({ record, onEllipsisClicked }) => {
           <WalletIcon /> {currencyFormat(parseInt(record.value))}
         </S.Content>
         <S.Content color="#b71c1c">
-          <RemainIcon /> {currencyFormat(parseInt(record.value - used))}
+          <RemainIcon />{" "}
+          {currencyFormat(parseInt(record.value) - parseInt(record.expense))}
         </S.Content>
       </S.RowContent>
     </S.Card>

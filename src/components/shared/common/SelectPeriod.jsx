@@ -5,7 +5,7 @@ import { Center, Space } from "components/shared/common";
 import { Colors } from "constants";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePeriodStore } from "../../../zustand/periodStore";
+import { usePeriodStore } from "../../../store/periodStore";
 
 const SelectPeriod = () => {
   const navigate = useNavigate();

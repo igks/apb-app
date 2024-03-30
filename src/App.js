@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Provider } from "react-redux";
 
 import FormLogin from "components/forms/FormLogin";
 
 import "App.css";
 
 import Container from "container";
-import store from "redux/store";
 import { appRoutes } from "routes";
 import { firebaseAuth, login } from "services/auth";
 
@@ -59,13 +57,11 @@ function App() {
 
   return (
     <>
-      <Provider store={store}>
-        {!isAuthenticated ? (
-          <Container content={Login} />
-        ) : (
-          <Container header={header} content={appRoutes} />
-        )}
-      </Provider>
+      {!isAuthenticated ? (
+        <Container content={Login} />
+      ) : (
+        <Container header={header} content={appRoutes} />
+      )}
     </>
   );
 }

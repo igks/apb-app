@@ -13,7 +13,7 @@ import { deleteExpense } from "services/expense";
 import LoadingFallback from "../components/shared/LoadingFallback/index";
 import { Colors } from "../constants";
 import { currencyFormat } from "../helpers/currency-format";
-import { useBudgetStore } from "./../zustand/budgetStore";
+import { useBudgetStore } from "../store/budgetStore";
 import * as S from "./styled.component";
 
 const Detail = () => {

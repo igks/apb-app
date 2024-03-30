@@ -10,8 +10,8 @@ import { Colors } from "constants";
 import { getBudgetBalance, getUnAllocatedBudget } from "helpers/common";
 import { currencyFormat } from "helpers/currency-format";
 import { useNavigate } from "react-router-dom";
-import { useBudgetStore } from "./../../../zustand/budgetStore";
-import { usePeriodStore } from "./../../../zustand/periodStore";
+import { useBudgetStore } from "../../../store/budgetStore";
+import { usePeriodStore } from "../../../store/periodStore";
 import * as S from "./styled.component";
 
 const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
@@ -41,11 +41,12 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
       </S.Row>
       <S.Row>
         <S.Card color="#ffcdd2">
-          <BalanceIcon size="1x" /> <span> {currencyFormat(balance)}</span>
+          <BalanceIcon size="1x" />{" "}
+          <span> {currencyFormat(parseInt(balance))}</span>
         </S.Card>
         <S.Card color="#ffe57f">
           <UnAllocatedIcon size="1x" />{" "}
-          <span> {currencyFormat(unAllocated)}</span>
+          <span> {currencyFormat(parseInt(unAllocated))}</span>
         </S.Card>
       </S.Row>
       <S.Divider />

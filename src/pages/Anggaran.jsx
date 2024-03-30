@@ -8,9 +8,9 @@ import LoadingFallback from "components/shared/LoadingFallback";
 import { getBudget } from "services/budget";
 import FormModalDetail from "../components/forms/FormModalDetail";
 import { default as SelectPeriod } from "../components/shared/common/SelectPeriod";
-import { usePeriodStore } from "../zustand/periodStore";
-import { useBudgetStore } from "./../zustand/budgetStore";
-import { useUiStore } from "./../zustand/uiStore";
+import { useBudgetStore } from "../store/budgetStore";
+import { usePeriodStore } from "../store/periodStore";
+import { useUiStore } from "../store/uiStore";
 import * as S from "./styled.component";
 
 const Anggaran = () => {
@@ -20,177 +20,8 @@ const Anggaran = () => {
 
   const noPeriod = month === "_" || year === "_";
 
-  // const navigate = useNavigate();
-
   const [isShowModalDetail, setIsShowModalDetail] = useState(false);
   const [isShowFormBudget, setIsShowFormBudget] = useState(false);
-
-  // const [formData, setFormData] = useState({
-  //   id: null,
-  //   item: "",
-  //   value: 0,
-  //   isApprove: true,
-  //   details: [],
-  // });
-  // const [bulan, setBulan] = useState("Pilih bulan");
-
-  // const [formConfig, setFormConfig] = useState({
-  //   id: id,
-  //   income: income,
-  //   carryForward: carryForward,
-  // });
-
-  // const updateFormConfig = (e) => {
-  //   let targetName = e.target.name;
-  //   let parsed = parseInt(e.target.value);
-  //   if (isNaN(parsed)) {
-  //     setFormConfig({
-  //       ...formConfig,
-  //       [targetName]: 0,
-  //     });
-  //   } else {
-  //     setFormConfig({
-  //       ...formConfig,
-  //       [targetName]: parsed,
-  //     });
-  //   }
-  // };
-
-  // const submitConfig = async () => {
-  //   const { isSuccess, error } = await updateConfig(formConfig);
-  //   if (!isSuccess) {
-  //     alert(error);
-  //   }
-  //   setIsShowFormBudget(false);
-  //   dispatch({
-  //     type: GET_ANGGARAN_HEADER_REQUESTED,
-  //     payload: {
-  //       records: list.data,
-  //     },
-  //   });
-  // };
-
-  // const getAnggaran = async () => {};
-
-  // const onSubmit = async () => {
-  //   const { isValid, error } = await addAnggaran(formData);
-
-  //   if (!isValid) {
-  //     alert("Data tidak valid!");
-  //     setIsShowModal(false);
-  //   }
-
-  //   if (error) {
-  //     alert(error);
-  //     setIsShowModal(false);
-  //   }
-
-  //   setFormData({
-  //     ...formData,
-  //     id: null,
-  //     item: "",
-  //     value: 0,
-  //     isApprove: true,
-  //     details: [],
-  //   });
-  //   setIsShowModal(false);
-  //   getAnggaran();
-  // };
-
-  // const updateFormData = (e) => {
-  //   let targetName = e.target.name;
-  //   if (targetName === "item") {
-  //     setFormData({
-  //       ...formData,
-  //       [targetName]: e.target.value,
-  //     });
-  //   }
-  //   if (targetName === "value") {
-  //     let parsed = parseInt(e.target.value);
-  //     if (isNaN(parsed)) {
-  //       setFormData({
-  //         ...formData,
-  //         [targetName]: 0,
-  //       });
-  //     } else {
-  //       setFormData({
-  //         ...formData,
-  //         [targetName]: parsed,
-  //       });
-  //     }
-  //   }
-  // };
-
-  // const onAddData = () => {
-  //   setFormData({
-  //     ...formData,
-  //     item: "",
-  //     value: 0,
-  //     isApprove: true,
-  //     bulan: bulan,
-  //   });
-  //   setIsShowModal(true);
-  // };
-
-  // const onUpdate = (record) => {
-  //   setFormData({
-  //     ...formData,
-  //     id: record.id,
-  //     item: record.item,
-  //     value: record.value,
-  //     isApprove: record.isApprove,
-  //     bulan: record.bulan,
-  //   });
-
-  //   setIsShowOptionModal({
-  //     ...isShowOptionModal,
-  //     record: null,
-  //     status: false,
-  //   });
-
-  //   setIsShowModal(true);
-  // };
-
-  // const onDelete = async (id) => {
-  //   setIsShowOptionModal({
-  //     ...isShowOptionModal,
-  //     record: null,
-  //     status: false,
-  //   });
-
-  //   if (window.confirm("Hapus data?")) {
-  //     const isSuccess = await deleteAnggaran(id);
-  //     if (isSuccess) {
-  //       getAnggaran();
-  //       // updateHeader();
-  //     }
-  //   }
-  // };
-
-  // const goToDetail = (record) => {
-  //   navigate("/detail", { state: { data: record, month: bulan } });
-  //   setIsShowOptionModal({
-  //     ...isShowOptionModal,
-  //     record: null,
-  //     status: false,
-  //   });
-  // };
-
-  // const handleOptionModal = (record, status) => {
-  //   setIsShowOptionModal({
-  //     ...isShowOptionModal,
-  //     record: record,
-  //     status: status,
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   setFormConfig({
-  //     id: id,
-  //     income: income,
-  //     carryForward: carryForward,
-  //   });
-  // }, [config]);
 
   useEffect(() => {
     if (!noPeriod) {
@@ -219,7 +50,7 @@ const Anggaran = () => {
         />
       </S.Header>
       <S.Body>
-        <AnggaranList records={budget.details} handleOptionModal={() => {}} />
+        <AnggaranList records={budget.details} />
       </S.Body>
 
       {isShowFormBudget && (
@@ -235,15 +66,6 @@ const Anggaran = () => {
           handleClose={() => setIsShowModalDetail(false)}
         />
       )}
-
-      {/* {isShowOptionModal.status && (
-        <OptionModal
-          onClickCloseButton={() => handleOptionModal(null, false)}
-          onClickList={() => goToDetail(isShowOptionModal.record)}
-          onClickEdit={() => onUpdate(isShowOptionModal.record)}
-          onClickDelete={() => onDelete(isShowOptionModal.record.id)}
-        />
-      )} */}
     </S.Container>
   );
 };

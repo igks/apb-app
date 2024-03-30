@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { db } from "../services/firebase";
+import { AddFileIcon, GoBackIcon } from "components/shared/Icons";
+import LoadingFallback from "components/shared/LoadingFallback";
 import {
-  collection,
   addDoc,
-  doc,
+  collection,
   deleteDoc,
-  query,
+  doc,
   getDocs,
+  query,
 } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FormNote from "../components/forms/FormNote";
 import Note from "../components/note";
-import * as S from "./styled.component";
-import { AddFileIcon, GoBackIcon } from "components/shared/Icons";
 import { Colors } from "../constants";
-import LoadingFallback from "components/shared/LoadingFallback";
+import { db } from "../services/firebase";
+import * as S from "./styled.component";
 
 function Catatan() {
   const navigate = useNavigate();

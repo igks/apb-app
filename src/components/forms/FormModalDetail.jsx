@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { addBudgetDetail } from "services/budgetDetail";
+import { addBudgetDetail, updateBudgetDetail } from "services/budgetDetail";
 import * as S from "./styled.component";
 
-const FormModalDetail = ({ budget, handleClose }) => {
+const FormModalDetail = ({ budget, handleClose, isUpdate = false }) => {
   const { id, month, year } = budget?.data;
   const [formData, setFormData] = useState({
-    name: "",
-    value: 0,
+    name: isUpdate ? budget?.data.name : "",
+    value: isUpdate ? budget?.data.value : 0,
   });
 
   const updateFormData = (e) => {
@@ -17,15 +17,24 @@ const FormModalDetail = ({ budget, handleClose }) => {
   };
 
   const onSubmit = async () => {
-    const detail = {
-      budgetId: id,
-      month,
-      year,
-      name: formData.name,
-      value: formData.value,
-      balance: formData.value,
-    };
-    await addBudgetDetail(detail);
+    if (isUpdate) {
+      const detail = {
+        ...budget?.data,
+        name: formData.name,
+        value: formData.value,
+      };
+      await updateBudgetDetail(id, detail);
+    } else {
+      const detail = {
+        budgetId: id,
+        month,
+        year,
+        name: formData.name,
+        value: formData.value,
+        expense: 0,
+      };
+      await addBudgetDetail(detail);
+    }
     handleClose();
   };
 
@@ -38,7 +47,7 @@ const FormModalDetail = ({ budget, handleClose }) => {
             <S.Label>Item</S.Label>
             <S.Input
               type="text"
-              value={formData.item}
+              value={formData.name}
               name="name"
               autoComplete="off"
               onChange={(e) => updateFormData(e)}

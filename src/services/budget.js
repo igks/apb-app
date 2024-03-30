@@ -9,8 +9,8 @@ import {
   where,
 } from "firebase/firestore";
 import { getPreviousPeriod } from "helpers/period";
-import { useBudgetStore } from "../zustand/budgetStore";
-import { useUiStore } from "./../zustand/uiStore";
+import { useBudgetStore } from "../store/budgetStore";
+import { useUiStore } from "../store/uiStore";
 import { getBudgetDetails } from "./budgetDetail";
 import { db } from "./firebase";
 

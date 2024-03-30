@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { addBudget, updateBudget } from "services/budget";
-import { useBudgetStore } from "../../zustand/budgetStore";
-import { usePeriodStore } from "./../../zustand/periodStore";
+import { useBudgetStore } from "../../store/budgetStore";
+import { usePeriodStore } from "../../store/periodStore";
 import * as S from "./styled.component";
 
 const FormBudget = ({ handleClose, isUpdate }) => {
