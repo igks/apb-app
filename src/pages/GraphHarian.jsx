@@ -100,8 +100,8 @@ const GraphHarian = () => {
 
   return (
     <div className="container">
-      <div className="d-flex justify-content-between align-items-center">
-        <div onClick={() => navigate("/")}>
+      <div className="d-flex align-items-center">
+        <div onClick={() => navigate("/")} style={{ marginRight: 30 }}>
           <GoBackIcon size="xl" color={Colors.grey} />
         </div>
         <SelectMonth setPeriod={setPeriod} />

@@ -42,3 +42,12 @@ export const Divider = styled.hr`
 export const EmptyNote = styled.div`
   margin: auto;
 `;
+
+export const MenuBox = styled.div`
+  width: 50%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;

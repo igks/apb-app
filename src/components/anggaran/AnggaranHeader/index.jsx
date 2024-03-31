@@ -7,7 +7,11 @@ import {
   UnAllocatedIcon,
 } from "components/shared/Icons";
 import { Colors } from "constants";
-import { getBudgetBalance, getUnAllocatedBudget } from "helpers/common";
+import {
+  getAvailableBudget,
+  getBudgetBalance,
+  getUnAllocatedBudget,
+} from "helpers/common";
 import { currencyFormat } from "helpers/currency-format";
 import { useNavigate } from "react-router-dom";
 import { useBudgetStore } from "../../../store/budgetStore";
@@ -20,7 +24,8 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
   const { data: budget, details } = useBudgetStore((state) => state.budget);
 
   const balance = getBudgetBalance(budget?.limit, details);
-  const unAllocated = getUnAllocatedBudget(balance, budget?.deposit);
+  const availableBudget = getAvailableBudget(details);
+  const unAllocated = getUnAllocatedBudget(availableBudget, budget?.deposit);
 
   const handleGoBack = () => {
     resetPeriod();
@@ -42,7 +47,7 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
       <S.Row>
         <S.Card color="#ffcdd2">
           <BalanceIcon size="1x" />{" "}
-          <span> {currencyFormat(parseInt(balance))}</span>
+          <span> {currencyFormat(parseInt(availableBudget))}</span>
         </S.Card>
         <S.Card color="#ffe57f">
           <UnAllocatedIcon size="1x" />{" "}
