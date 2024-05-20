@@ -27,8 +27,8 @@ export const getBudget = async (month, year) => {
   const snapshot = await getDocs(q);
   if (!snapshot.empty) {
     const budget = {
-      id: snapshot.docs[0].id,
       ...snapshot.docs[0].data(),
+      id: snapshot.docs[0].id,
     };
     const details = await getBudgetDetails(snapshot.docs[0].id);
     useBudgetStore.getState().receiveBudget({ budget, details });
@@ -54,6 +54,7 @@ export const copyBudget = async (currentMonth, currentYear) => {
       ...snapshot.docs[0].data(),
       month: currentMonth,
       year: currentYear,
+      id: ""
     };
 
     const newBudget = await addDoc(budgetRef, budget);
