@@ -5,6 +5,7 @@ import {
   GoBackIcon,
   IncomeIcon,
   UnAllocatedIcon,
+  FilePdfIcon
 } from "components/shared/Icons";
 import { Colors } from "constants";
 import {
@@ -17,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { useBudgetStore } from "../../../store/budgetStore";
 import { usePeriodStore } from "../../../store/periodStore";
 import * as S from "./styled.component";
+import { Space } from "../../shared/common";
+import ExportPdf from "../../export-pdf";
 
 const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
   const navigate = useNavigate();
@@ -58,7 +61,11 @@ const AnggaranHeader = ({ onCreateBudget, onAddDetail }) => {
       <S.Row>
         <GoBackIcon size="xl" color={Colors.grey} onClick={handleGoBack} />
         <S.Title>{`${budget?.month?.toUpperCase()} - ${budget?.year}`}</S.Title>
+        <S.Row>
         <AddFileIcon size="xl" color={Colors.green} onClick={onAddDetail} />
+        <Space w="24px"/>
+        <ExportPdf/>
+        </S.Row>
       </S.Row>
       <S.Divider />
     </>

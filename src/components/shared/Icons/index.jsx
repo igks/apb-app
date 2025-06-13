@@ -14,6 +14,7 @@ import {
   faList,
   faRectangleXmark,
   faGears,
+  faFilePdf,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const AddFileIcon = (props) => (
@@ -68,4 +69,8 @@ export const CloseIcon = (props) => (
 
 export const SettingIcon = (props) => (
   <FontAwesomeIcon icon={faGears} {...props} />
+);
+
+export const FilePdfIcon = (props) => (
+  <FontAwesomeIcon icon={faFilePdf} {...props} />
 );

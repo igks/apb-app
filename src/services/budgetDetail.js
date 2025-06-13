@@ -37,6 +37,26 @@ export const getBudgetDetails = async (budgetId) => {
   return details;
 };
 
+export const getBudgetDetailsByPeriod = async (year, month) => {
+  const q = query(
+    detailRef,
+    where("year", "==", year),
+    where("month", "==", month)
+  );
+  const snapshot = await getDocs(q);
+  const details = [];
+  if (!snapshot.empty) {
+    snapshot.forEach((s) => {
+      details.push({
+        id: s.id,
+        ...s.data(),
+      });
+    });
+  }
+  return details;
+};
+
+
 export const addBudgetDetail = async (detail) => {
   uiState.uiLoading();
   await addDoc(detailRef, detail);

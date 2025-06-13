@@ -41,6 +41,22 @@ export const getExpense = async (detailId) => {
   return expense;
 };
 
+export const getExpenseByPeriod = async (year, month) => {
+  const q = query(expenseRef, where("year", "==", year), where("month", "==", month));
+  const snapshot = await getDocs(q);
+  const expense = [];
+  if (!snapshot.empty) {
+    snapshot.forEach((s) => {
+      expense.push({
+        id: s.id,
+        ...s.data(),
+      });
+    });
+  }
+  return expense;
+};
+
+
 export const addExpense = async (expense) => {
   uiState.uiLoading();
   await addDoc(expenseRef, expense);
