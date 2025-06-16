@@ -11,6 +11,7 @@ import Detail from "./pages/Detail";
 import GraphHarian from "./pages/GraphHarian";
 import Menu from "./pages/Menu";
 import PerTanggal from "./pages/PerTanggal";
+import Kwitansi from "./pages/Kwitansi";
 
 export const appRoutes = (
   <Router>
@@ -22,6 +23,7 @@ export const appRoutes = (
       <Route path="/catatan" element={<Catatan />}></Route>
       <Route path="/pertanggal" element={<PerTanggal />}></Route>
       <Route path="/graph-harian" element={<GraphHarian />}></Route>
+      <Route path="/kwitansi" element={<Kwitansi />}></Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </Router>

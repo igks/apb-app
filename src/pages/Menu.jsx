@@ -2,6 +2,7 @@ import Calendar from "assets/image/calendar.jpg";
 import Chart from "assets/image/chart.jpg";
 import Coin from "assets/image/coin-rp.jpg";
 import DewiLaksmi from "assets/image/dewi-laksmi.jpg";
+import Receipt from "assets/image/receipt.jpg";
 import Note from "assets/image/note.png";
 import { Center, Space } from "components/shared/common";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +48,12 @@ const Menu = () => {
         <MenuBox onClick={() => navigate("/graph-harian")}>
           <img src={Chart} width={100} alt="" className="rounded-circle" />
           <p>Expense Trend</p>
+        </MenuBox>
+      </Center>
+      <Center>
+        <MenuBox onClick={() => navigate("/kwitansi")}>
+          <img src={Receipt} width={100} alt="" className="rounded-circle" />
+          <p>Kwitansi</p>
         </MenuBox>
       </Center>
     </>
